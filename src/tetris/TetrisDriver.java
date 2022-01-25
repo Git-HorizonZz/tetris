@@ -11,6 +11,9 @@ public class TetrisDriver
 	private static int count = 0;
 	private static int speed = 1000;
 	
+	private static final Tetris game = new Tetris();
+	private TetrisActions actions = new TetrisActions(game);
+	
 	public static void main(String [] args) 
 	{
 		JOptionPane.showMessageDialog(null, "rotate left : w, up \nrotate right : s, down \nmove left : a, left\nmove right : d, right\ndrop : space", "Controls", JOptionPane.DEFAULT_OPTION);
@@ -19,7 +22,7 @@ public class TetrisDriver
 		JFrame f = tts.f;
 		f.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		f.setSize(310, 623);
-		final Tetris game = new Tetris();
+		
 		game.startUp();
 		f.add(game);
 		f.setLocationRelativeTo(null);
@@ -48,5 +51,9 @@ public class TetrisDriver
 				}
 			}
 		}.start();
+	}
+
+	public TetrisActions getActionsObject() {
+		return actions;
 	}
 }
