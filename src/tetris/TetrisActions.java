@@ -15,6 +15,7 @@ public class TetrisActions implements KeyListener {
 		
 	public void keyPressed(KeyEvent e) 
 	{
+		System.out.println(e);
 		switch (e.getKeyCode())
 		{
 			case KeyEvent.VK_UP:

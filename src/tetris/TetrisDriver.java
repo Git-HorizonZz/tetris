@@ -1,8 +1,5 @@
 package tetris;
 
-import java.awt.event.KeyEvent;
-import java.awt.event.KeyListener;
-
 import javax.swing.JFrame;
 import javax.swing.JOptionPane;
 
@@ -12,7 +9,7 @@ public class TetrisDriver
 	private static int speed = 1000;
 	
 	private static final Tetris game = new Tetris();
-	private TetrisActions actions = new TetrisActions(game);
+	private static TetrisActions actions = new TetrisActions(game);
 	
 	public static void main(String [] args) 
 	{
@@ -53,7 +50,7 @@ public class TetrisDriver
 		}.start();
 	}
 
-	public TetrisActions getActionsObject() {
+	public static TetrisActions getActionsObject() {
 		return actions;
 	}
 }
