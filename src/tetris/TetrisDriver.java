@@ -35,7 +35,7 @@ public class TetrisDriver
 		{
 			public void run() 
 			{
-				while (true) 
+				while (!game.getGameOver()) 
 				{
 					try 
 					{

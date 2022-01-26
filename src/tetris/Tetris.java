@@ -262,5 +262,9 @@ public class Tetris extends JPanel
 		}
 	}
 	
+	public boolean getGameOver() {
+		return gameOver;
+	}
+	
 	
 }

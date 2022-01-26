@@ -1,2 +1,3 @@
-
-bin/**
+bin/tetris/**
+bin/tetris/Tetris.class
+bin/tetris/TetrisDriver$1.class
