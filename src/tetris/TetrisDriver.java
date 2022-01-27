@@ -53,4 +53,8 @@ public class TetrisDriver
 	public static TetrisActions getActionsObject() {
 		return actions;
 	}
+
+	public static Tetris getGameUI(){
+		return game;
+	}
 }
