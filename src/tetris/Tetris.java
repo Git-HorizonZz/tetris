@@ -13,6 +13,8 @@ import javax.swing.JPanel;
 
 public class Tetris extends JPanel
 {
+	private static final long serialVersionUID = 1L;
+	
 	public JFrame f = new JFrame("Tetris");
 	
 	private final Point [] [] [] Tetrominos = 
