@@ -7,5 +7,6 @@
 	</classpathentry>
 	<classpathentry kind="src" path="src"/>
 	<classpathentry kind="lib" path="lib/libtensorflow-1.14.0.jar"/>
+	<classpathentry kind="lib" path="lib/py4j0.10.9.3.jar"/>
 	<classpathentry kind="output" path="bin"/>
 </classpath>

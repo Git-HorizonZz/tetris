@@ -1,7 +1,10 @@
 package tetris;
 
+import java.util.Stack;
+
 import javax.swing.JFrame;
-import javax.swing.JOptionPane;
+
+import py4j.Gateway;
 
 public class TetrisDriver 
 {
@@ -13,8 +16,6 @@ public class TetrisDriver
 	
 	public static void main(String [] args) 
 	{
-	//	JOptionPane.showMessageDialog(null, "rotate left : w, up \nrotate right : s, down \nmove left : a, left\nmove right : d, right\ndrop : space", "Controls", JOptionPane.DEFAULT_OPTION);
-	//	JOptionPane.showMessageDialog(null, "1 row : 100 points\n2 rows : 300 points\n3 rows : 500 points\n4rows : 800 points", "Points", JOptionPane.DEFAULT_OPTION);
 		Tetris tts = new Tetris();
 		JFrame f = tts.f;
 		f.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
@@ -50,11 +51,20 @@ public class TetrisDriver
 		}.start();
 	}
 
-	public static TetrisActions getActionsObject() {
+	public static TetrisActions getActionsObject() 
+	{
 		return actions;
 	}
 
-	public static Tetris getGameUI(){
+	public static Tetris getGameUI()
+	{
 		return game;
 	}
+
+	private Stack stack = new Stack();
+
+    public Stack getStack() {
+        return stack;
+    }
+
 }

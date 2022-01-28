@@ -11,7 +11,6 @@ import javax.swing.JFrame;
 import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 
-@SuppressWarnings("serial")
 public class Tetris extends JPanel
 {
 	public JFrame f = new JFrame("Tetris");
@@ -262,7 +261,8 @@ public class Tetris extends JPanel
 		}
 	}
 	
-	public boolean getGameOver() {
+	public boolean getGameOver() 
+	{
 		return gameOver;
 	}
 	
