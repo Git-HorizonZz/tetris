@@ -1,14 +1,25 @@
 package ai;
 
 import java.awt.event.KeyEvent;
+import java.awt.Robot;
+import java.awt.AWTException;
+
+import java.io.*;
 
 import tetris.*;
 
 import org.tensorflow.*;
 
 public class aiDriver {
+ 
+    static Robot robot;
 
-    public static void main(String[] args) {
+    public aiDriver() throws AWTException{
+        robot = new Robot();
+    }
+    
+    public static void main(String[] args) throws IOException, AWTException, InterruptedException
+    {
         TetrisDriver.main(args);
         for(int i = 0; i < 100; i++){
         	try {
@@ -17,23 +28,41 @@ public class aiDriver {
 				// TODO Auto-generated catch block
 				e.printStackTrace();
 			}
-            TetrisDriver.getActionsObject().keyPressed(leftKey());
+            
         }
     }
 
-    public static KeyEvent rightKey(){
-        return new KeyEvent(TetrisDriver.getGameUI().f, KeyEvent.KEY_LOCATION_RIGHT, System.currentTimeMillis(), 0, KeyEvent.VK_RIGHT, KeyEvent.CHAR_UNDEFINED);
+    public static void moveRight(){
+        robot.keyPress(KeyEvent.VK_RIGHT);
     }
 
-    public static KeyEvent leftKey(){
-        return new KeyEvent(TetrisDriver.getGameUI().f, KeyEvent.KEY_LOCATION_LEFT, System.currentTimeMillis(), 0, KeyEvent.VK_LEFT, KeyEvent.CHAR_UNDEFINED);
+    public static void moveLeft(){
+        robot.keyPress(KeyEvent.VK_LEFT);
     }
 
-    public static KeyEvent upKey(){
-        return new KeyEvent(TetrisDriver.getGameUI().f, KeyEvent.VK_KP_DOWN, System.currentTimeMillis(), 0, KeyEvent.VK_UP, KeyEvent.CHAR_UNDEFINED);
+    public static void rotateClockwise(){
+        robot.keyPress(KeyEvent.VK_DOWN);
     }
 
-    public static KeyEvent downKey(){
-        return new KeyEvent(TetrisDriver.getGameUI().f, KeyEvent.VK_KP_UP, System.currentTimeMillis(), 0, KeyEvent.VK_DOWN, KeyEvent.CHAR_UNDEFINED);
+    public static void rotateCounterClockwise(){
+        robot.keyPress(KeyEvent.VK_UP);
     }
+
+    public static void dropDown()
+    {
+        robot.keyPress(KeyEvent.VK_SPACE);
+    }
+
+    /**
+     * 
+     * THINGS AI MUST LEARN
+     * 
+     * Figure out ideal rotation
+     * Figure out ideal position
+     * Drop
+     * 
+     * Store information
+     * 
+     */
+
 }
