@@ -2,12 +2,21 @@ package tetris;
 
 import java.awt.event.KeyEvent;
 import java.awt.event.KeyListener;
+import java.awt.Robot;
+
+import java.awt.AWTException;
+
+
 
 public class TetrisActions implements KeyListener {
 	
 	final Tetris game;
+	static Robot robot;
+
 	
-	public TetrisActions(Tetris game) {
+	public TetrisActions(Tetris game) throws AWTException
+	{
+		robot = new Robot();
 		this.game = game;
 	}
 	
@@ -49,4 +58,29 @@ public class TetrisActions implements KeyListener {
 	
 	public void keyReleased(KeyEvent e) { }
 	
+	public static void moveRight()
+    {
+        robot.keyPress(KeyEvent.VK_RIGHT);
+    }
+
+    public static void moveLeft()
+    {
+        robot.keyPress(KeyEvent.VK_LEFT);
+    }
+
+    public static void rotateClockwise()
+    {
+        robot.keyPress(KeyEvent.VK_DOWN);
+    }
+
+    public static void rotateCounterClockwise()
+    {
+        robot.keyPress(KeyEvent.VK_UP);
+    }
+
+    public static void dropDown()
+    {
+        robot.keyPress(KeyEvent.VK_SPACE);
+    }
+
 }

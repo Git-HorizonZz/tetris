@@ -1,10 +1,13 @@
 package tetris;
 
+import java.awt.AWTException;
+import java.io.IOException;
 import java.util.Stack;
 
 import javax.swing.JFrame;
 
 import py4j.Gateway;
+import py4j.GatewayServer;
 
 public class TetrisDriver 
 {
@@ -12,10 +15,18 @@ public class TetrisDriver
 	private static int speed = 1000;
 	
 	private static final Tetris game = new Tetris();
-	private static TetrisActions actions = new TetrisActions(game);
+	private static TetrisActions actions;
 	
-	public static void main(String [] args) 
+	public static void main(String [] args) throws AWTException, IOException
 	{
+
+		//sets up java side of py4j connection
+		actions = new TetrisActions(game);
+		GatewayServer gatewayServer = new GatewayServer(new TetrisDriver());
+        gatewayServer.start();
+        System.out.println("Gateway Server Started");
+
+		
 		Tetris tts = new Tetris();
 		JFrame f = tts.f;
 		f.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
@@ -29,6 +40,9 @@ public class TetrisDriver
 		
 		f.addKeyListener(new TetrisActions(game));
 		
+		//runs ai python script
+		Runtime.getRuntime().exec("python src/ai/aiPython.py");
+
 		new Thread() 
 		{
 			public void run() 
@@ -61,9 +75,9 @@ public class TetrisDriver
 		return game;
 	}
 
-	private Stack stack = new Stack();
+	private Stack<?> stack = new Stack();
 
-    public Stack getStack() {
+    public Stack<?> getStack() {
         return stack;
     }
 
