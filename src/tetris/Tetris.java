@@ -19,55 +19,48 @@ public class Tetris extends JPanel
 	
 	private final Point [] [] [] Tetrominos = 
 	{
-			// |
-			{
-				{ new Point(0, 1), new Point(1, 1), new Point(2, 1), new Point(3, 1) },
-				{ new Point(1, 0), new Point(1, 1), new Point(1, 2), new Point(1, 3) },
-				{ new Point(0, 1), new Point(1, 1), new Point(2, 1), new Point(3, 1) },
-				{ new Point(1, 0), new Point(1, 1), new Point(1, 2), new Point(1, 3) }
-			},
-			// J
-			{
-				{ new Point(0, 1), new Point(1, 1), new Point(2, 1), new Point(2, 0) },
-				{ new Point(1, 0), new Point(1, 1), new Point(1, 2), new Point(2, 2) },
-				{ new Point(0, 1), new Point(1, 1), new Point(2, 1), new Point(0, 2) },
-				{ new Point(1, 0), new Point(1, 1), new Point(1, 2), new Point(0, 0) }
-			},
-			// L
-			{
-				{ new Point(0, 1), new Point(1, 1), new Point(2, 1), new Point(2, 2) },
-				{ new Point(1, 0), new Point(1, 1), new Point(1, 2), new Point(0, 2) },
-				{ new Point(0, 1), new Point(1, 1), new Point(2, 1), new Point(0, 0) },
-				{ new Point(1, 0), new Point(1, 1), new Point(1, 2), new Point(2, 0) }
-			},
-			// []
-			{
-				{ new Point(0, 0), new Point(0, 1), new Point(1, 0), new Point(1, 1) },
-				{ new Point(0, 0), new Point(0, 1), new Point(1, 0), new Point(1, 1) },
-				{ new Point(0, 0), new Point(0, 1), new Point(1, 0), new Point(1, 1) },
-				{ new Point(0, 0), new Point(0, 1), new Point(1, 0), new Point(1, 1) }
-			},
-			// S
-			{
-				{ new Point(1, 0), new Point(2, 0), new Point(0, 1), new Point(1, 1) },
-				{ new Point(0, 0), new Point(0, 1), new Point(1, 1), new Point(1, 2) },
-				{ new Point(1, 0), new Point(2, 0), new Point(0, 1), new Point(1, 1) },
-				{ new Point(0, 0), new Point(0, 1), new Point(1, 1), new Point(1, 2) }
-			},
-			// T
-			{
-				{ new Point(1, 0), new Point(0, 1), new Point(1, 1), new Point(2, 1) },
-				{ new Point(1, 0), new Point(0, 1), new Point(1, 1), new Point(1, 2) },
-				{ new Point(0, 1), new Point(1, 1), new Point(2, 1), new Point(1, 2) },
-				{ new Point(1, 0), new Point(1, 1), new Point(2, 1), new Point(1, 2) }
-			},
-			// Z
-			{
-				{ new Point(0, 0), new Point(1, 0), new Point(1, 1), new Point(2, 1) },
-				{ new Point(1, 0), new Point(0, 1), new Point(1, 1), new Point(0, 2) },
-				{ new Point(0, 0), new Point(1, 0), new Point(1, 1), new Point(2, 1) },
-				{ new Point(1, 0), new Point(0, 1), new Point(1, 1), new Point(0, 2) }
-			}
+		{
+			{ new Point(0, 1), new Point(1, 1), new Point(2, 1), new Point(3, 1) },		//    []
+			{ new Point(1, 0), new Point(1, 1), new Point(1, 2), new Point(1, 3) },		//    []
+			{ new Point(0, 1), new Point(1, 1), new Point(2, 1), new Point(3, 1) },		//    []
+			{ new Point(1, 0), new Point(1, 1), new Point(1, 2), new Point(1, 3) }		//    []
+		},
+		{
+			{ new Point(0, 1), new Point(1, 1), new Point(2, 1), new Point(2, 0) },		//
+			{ new Point(1, 0), new Point(1, 1), new Point(1, 2), new Point(2, 2) },		//    []
+			{ new Point(0, 1), new Point(1, 1), new Point(2, 1), new Point(0, 2) },		//    []
+			{ new Point(1, 0), new Point(1, 1), new Point(1, 2), new Point(0, 0) }		//  [][]
+		},
+		{
+			{ new Point(0, 1), new Point(1, 1), new Point(2, 1), new Point(2, 2) },		//  
+			{ new Point(1, 0), new Point(1, 1), new Point(1, 2), new Point(0, 2) },		//  []
+			{ new Point(0, 1), new Point(1, 1), new Point(2, 1), new Point(0, 0) },		//  []
+			{ new Point(1, 0), new Point(1, 1), new Point(1, 2), new Point(2, 0) }		//  [][]
+		},
+		{
+			{ new Point(0, 0), new Point(0, 1), new Point(1, 0), new Point(1, 1) },		//
+			{ new Point(0, 0), new Point(0, 1), new Point(1, 0), new Point(1, 1) },		//  [][]
+			{ new Point(0, 0), new Point(0, 1), new Point(1, 0), new Point(1, 1) },		//  [][]
+			{ new Point(0, 0), new Point(0, 1), new Point(1, 0), new Point(1, 1) }		//
+		},
+		{
+			{ new Point(1, 0), new Point(2, 0), new Point(0, 1), new Point(1, 1) },		//    
+			{ new Point(0, 0), new Point(0, 1), new Point(1, 1), new Point(1, 2) },		//    [][]
+			{ new Point(1, 0), new Point(2, 0), new Point(0, 1), new Point(1, 1) },		//  [][]
+			{ new Point(0, 0), new Point(0, 1), new Point(1, 1), new Point(1, 2) }		//
+		},
+		{
+			{ new Point(1, 0), new Point(0, 1), new Point(1, 1), new Point(2, 1) },		//
+			{ new Point(1, 0), new Point(0, 1), new Point(1, 1), new Point(1, 2) },		//  [][][]
+			{ new Point(0, 1), new Point(1, 1), new Point(2, 1), new Point(1, 2) },		//    []
+			{ new Point(1, 0), new Point(1, 1), new Point(2, 1), new Point(1, 2) }		//
+		},
+		{
+			{ new Point(0, 0), new Point(1, 0), new Point(1, 1), new Point(2, 1) },		//
+			{ new Point(1, 0), new Point(0, 1), new Point(1, 1), new Point(0, 2) },		//  [][]
+			{ new Point(0, 0), new Point(1, 0), new Point(1, 1), new Point(2, 1) },		//    [][]
+			{ new Point(1, 0), new Point(0, 1), new Point(1, 1), new Point(0, 2) }		//
+		}
 	};
 	
 	private final Color [] tetrominoColours = 
