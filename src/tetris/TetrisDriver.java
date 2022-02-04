@@ -36,7 +36,7 @@ public class TetrisDriver
 		f.add(game);
 		f.setLocationRelativeTo(null);
 		f.setVisible(true);
-		f.setResizable(false);
+	//	f.setResizable(false);
 		
 		f.addKeyListener(new TetrisActions(game));
 		

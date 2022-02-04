@@ -96,6 +96,8 @@ public class Tetris extends JPanel
 		}
 		county = 0;
 		spawnPiece();
+
+		System.out.println(getWall());
 	}
 	
 	public void spawnPiece()
@@ -147,7 +149,7 @@ public class Tetris extends JPanel
 	{
 		if (!collidesAt(pieceOrigin.x + i, pieceOrigin.y, rotation)) 
 		{
-			pieceOrigin.x += i;	
+			pieceOrigin.x += i;
 		}
 		repaint();
 	}
@@ -261,5 +263,29 @@ public class Tetris extends JPanel
 		return gameOver;
 	}
 	
+	/**
+	 * Gets array of where the wall is
+	 * @return false if there is no block. true if there is
+	 */
+	public boolean[][] getWall(){
+		boolean[][] bWall = new boolean[wall.length][wall[0].length];
+		System.out.println(wall.length + " : " + wall[0].length);
+		for(int row=0; row < wall.length; row++){
+			for(int col=0; col < wall[0].length - 1; col++){
+				System.out.println(row + " : " + col);
+				System.out.println(!wall[row][col].equals(Color.GRAY));
+				bWall[row][col] = !wall[row][col].equals(Color.GRAY);
+			}
+		}
+
+		return bWall;
+	}
 	
+	public int getX(){
+		return pieceOrigin.x;
+	}
+
+	public int getY(){
+		return pieceOrigin.y;
+	}
 }
