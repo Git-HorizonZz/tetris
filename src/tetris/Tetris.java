@@ -167,6 +167,7 @@ public class Tetris extends JPanel
 			for (Point p : Tetrominos [curPiece] [rotation])
 			{
 				wall[pieceOrigin.x + p.x][pieceOrigin.y + p.y] = tetrominoColours[curPiece];
+				printWall();
 			}
 			clearRows();
 			spawnPiece();
@@ -274,14 +275,39 @@ public class Tetris extends JPanel
 		// System.out.println(wall.length + " : " + wall[0].length);
 		for(int row=0; row < wall.length; row++){
 			for(int col=0; col < wall[0].length - 1; col++){
+<<<<<<< Updated upstream
 				// System.out.println(row + " : " + col);
 				System.out.print(!wall[row][col].equals(Color.GRAY) + " ");
+=======
+			//	System.out.println(row + " : " + col);
+				System.out.print(!wall[row][col].equals(Color.GRAY)+" ");
+>>>>>>> Stashed changes
 				bWall[row][col] = !wall[row][col].equals(Color.GRAY);
 			}
 			System.out.println();
 		}
 
 		return bWall;
+	}
+
+	public void printWall()
+	{
+		boolean [][] bW2 = getWall();
+		String [][] pWall = new String[bW2.length][bW2[0].length];
+		for(int row=0; row < bW2.length; row++)
+		{
+			for(int col=0; col < bW2[0].length - 1; col++)
+			{
+				pWall[row][col] = String.valueOf(bW2[row][col]);
+			}
+		}
+		for(int row=0; row < wall.length; row++){
+			for(int col=0; col < wall[0].length - 1; col++)
+			{
+				System.out.print(pWall[row][col]);
+			}
+			System.out.println();
+		}
 	}
 	
 	public int getX(){
