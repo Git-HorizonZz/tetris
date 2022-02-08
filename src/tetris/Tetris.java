@@ -69,7 +69,9 @@ public class Tetris extends JPanel
 	};
 	
 	private Point pieceOrigin;
-	private int curPiece, rotation, county;
+	private int curPiece;
+	private int rotation;
+	private int county;
 	private ArrayList <Integer> next = new ArrayList <Integer>();
 	private boolean gameOver = false;
 	private long score = 0;
@@ -97,7 +99,7 @@ public class Tetris extends JPanel
 		county = 0;
 		spawnPiece();
 
-		System.out.println(getWall());
+		// System.out.println(getWall());
 	}
 	
 	public void spawnPiece()
@@ -269,13 +271,14 @@ public class Tetris extends JPanel
 	 */
 	public boolean[][] getWall(){
 		boolean[][] bWall = new boolean[wall.length][wall[0].length];
-		System.out.println(wall.length + " : " + wall[0].length);
+		// System.out.println(wall.length + " : " + wall[0].length);
 		for(int row=0; row < wall.length; row++){
 			for(int col=0; col < wall[0].length - 1; col++){
-				System.out.println(row + " : " + col);
-				System.out.println(!wall[row][col].equals(Color.GRAY));
+				// System.out.println(row + " : " + col);
+				System.out.print(!wall[row][col].equals(Color.GRAY) + " ");
 				bWall[row][col] = !wall[row][col].equals(Color.GRAY);
 			}
+			System.out.println();
 		}
 
 		return bWall;
@@ -287,5 +290,10 @@ public class Tetris extends JPanel
 
 	public int getY(){
 		return pieceOrigin.y;
+	}
+
+	public int getRotation() {
+		System.out.println(rotation);
+		return rotation;
 	}
 }

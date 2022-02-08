@@ -25,17 +25,19 @@ public class TetrisDriver
 		GatewayServer gatewayServer = new GatewayServer(new TetrisDriver());
         gatewayServer.start();
         System.out.println("Gateway Server Started");
+		System.out.println("PRINT");
 
 		
 		Tetris tts = new Tetris();
 		JFrame f = tts.f;
 		f.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		f.setSize(310, 623);
-		
+
 		game.startUp();
 		f.add(game);
 		f.setLocationRelativeTo(null);
 		f.setVisible(true);
+		
 	//	f.setResizable(false);
 		
 		f.addKeyListener(new TetrisActions(game));
