@@ -19,3 +19,15 @@ class pythonTetris(py_environment.PyEnvironment):
     
     def observation_spec(self):
         return self._observation_spec
+
+    def _reset(self):
+        self._state = numpy.zeros(shape=(10,21))
+        self._episode_ended = False
+        return ts.restart(numpy.array([self._state], dtype=numpy.int32))
+
+    def _step(self, action):
+        if self._episode_ended:
+            return self.reset()
+
+        # TODO: analyze wall
+        # TODO: also, figure out how to get the wall in here
