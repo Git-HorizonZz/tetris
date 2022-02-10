@@ -27,21 +27,12 @@ actions_obj = tetris_game.getActionsObject()
 tetris_java = tetris_game.getGameUI()
 terminal = gateway.jvm.System.out
 
-<<<<<<< Updated upstream
 goToLocation(7,1)
 
-=======
-terminal.print(tetris_java.getWall())
->>>>>>> Stashed changes
 
 # numpy.zeros((state_size, 5))
 
 while True:
-<<<<<<< Updated upstream
  #  actions_obj.moveLeft()
     time.sleep(0.1)
 
-=======
-    
-    time.sleep(0.1)
->>>>>>> Stashed changes
