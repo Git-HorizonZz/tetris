@@ -97,6 +97,7 @@ public class Tetris extends JPanel
 			}
 		}
 		county = 0;
+		printWall();
 		spawnPiece();
 
 		// System.out.println(getWall());
@@ -167,8 +168,8 @@ public class Tetris extends JPanel
 			for (Point p : Tetrominos [curPiece] [rotation])
 			{
 				wall[pieceOrigin.x + p.x][pieceOrigin.y + p.y] = tetrominoColours[curPiece];
-				printWall();
 			}
+			printWall();
 			clearRows();
 			spawnPiece();
 		}	
@@ -272,14 +273,13 @@ public class Tetris extends JPanel
 	 */
 	public boolean[][] getWall(){
 		boolean[][] bWall = new boolean[wall.length][wall[0].length];
-		// System.out.println(wall.length + " : " + wall[0].length);
 		for(int row=0; row < wall.length; row++){
-			for(int col=0; col < wall[0].length - 1; col++){
-			//	System.out.println(row + " : " + col);
-				System.out.print(!wall[row][col].equals(Color.GRAY)+" ");
+			for(int col=0; col < wall[0].length - 1; col++)
+			{
 				bWall[row][col] = !wall[row][col].equals(Color.GRAY);
+		//		System.out.print(bWall[row][col] = !wall[row][col].equals(Color.GRAY));
 			}
-			System.out.println();
+		//	System.out.println();
 		}
 
 		return bWall;
@@ -296,13 +296,37 @@ public class Tetris extends JPanel
 				pWall[row][col] = String.valueOf(bW2[row][col]);
 			}
 		}
-		for(int row=0; row < wall.length; row++){
-			for(int col=0; col < wall[0].length - 1; col++)
+		// for(int row=0; row < wall.length; row++)
+		// {
+		// 	for(int col=0; col < wall[0].length - 1; col++)
+		// 	{
+		// 		if (pWall[row][col].length() == 4)
+		// 		{
+		// 			System.out.print(" "+pWall[row][col]+" ");
+		// 		}
+		// 		else
+		// 		{
+		// 			System.out.print(" "+pWall[row][col]);
+		// 		}
+		// 	}
+		// 	System.out.println();
+		// }
+		for(int row=0; row < wall.length; row++)
+		{
+			for(int col=wall[0].length-2; col >= 0; col--)
 			{
-				System.out.print(pWall[row][col]);
+				if (pWall[row][col].length() == 4)
+				{
+					System.out.print(" "+pWall[row][col]+" ");
+				}
+				else
+				{
+					System.out.print(" "+pWall[row][col]);
+				}
 			}
 			System.out.println();
 		}
+		System.out.println();
 	}
 	
 	public int getX(){
@@ -313,7 +337,8 @@ public class Tetris extends JPanel
 		return pieceOrigin.y;
 	}
 
-	public int getRotation() {
+	public int getRotation() 
+	{
 		System.out.println(rotation);
 		return rotation;
 	}
