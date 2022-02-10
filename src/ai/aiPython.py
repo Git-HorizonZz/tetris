@@ -5,12 +5,13 @@ import numpy
 import time
 
 def goToLocation(x_pos, rotation):
-    while tetris_java.getRotation() != rotation:
+    while tetris_java.getRotation() is not rotation:
         if tetris_java.getRotation() - rotation < 0:
-            actions_obj.rotateCounterClockwise()
-        else:
             actions_obj.rotateClockwise()
-        time.sleep(1)
+        else:
+            actions_obj.rotateCounterClockwise()
+        time.sleep(0.1)
+    
     while tetris_java.getX() != x_pos:
         if tetris_java.getX() > x_pos:
             actions_obj.moveLeft()
