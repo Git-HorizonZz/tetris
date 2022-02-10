@@ -296,21 +296,6 @@ public class Tetris extends JPanel
 				pWall[row][col] = String.valueOf(bW2[row][col]);
 			}
 		}
-		// for(int row=0; row < wall.length; row++)
-		// {
-		// 	for(int col=0; col < wall[0].length - 1; col++)
-		// 	{
-		// 		if (pWall[row][col].length() == 4)
-		// 		{
-		// 			System.out.print(" "+pWall[row][col]+" ");
-		// 		}
-		// 		else
-		// 		{
-		// 			System.out.print(" "+pWall[row][col]);
-		// 		}
-		// 	}
-		// 	System.out.println();
-		// }
 		for(int row=0; row < wall.length; row++)
 		{
 			for(int col=wall[0].length-2; col >= 0; col--)
