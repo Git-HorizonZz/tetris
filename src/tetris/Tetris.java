@@ -275,13 +275,8 @@ public class Tetris extends JPanel
 		// System.out.println(wall.length + " : " + wall[0].length);
 		for(int row=0; row < wall.length; row++){
 			for(int col=0; col < wall[0].length - 1; col++){
-<<<<<<< Updated upstream
-				// System.out.println(row + " : " + col);
-				System.out.print(!wall[row][col].equals(Color.GRAY) + " ");
-=======
 			//	System.out.println(row + " : " + col);
 				System.out.print(!wall[row][col].equals(Color.GRAY)+" ");
->>>>>>> Stashed changes
 				bWall[row][col] = !wall[row][col].equals(Color.GRAY);
 			}
 			System.out.println();
