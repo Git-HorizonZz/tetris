@@ -97,7 +97,7 @@ public class Tetris extends JPanel
 			}
 		}
 		county = 0;
-		printWall();
+		// printWall();
 		spawnPiece();
 
 		// System.out.println(getWall());

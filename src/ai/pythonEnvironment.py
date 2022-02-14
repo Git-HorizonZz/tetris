@@ -1,12 +1,16 @@
+print("hello from python!")
 import tensorflow as tf
 print("tf import finished")
 
 from tf_agents.environments import py_environment
 
+from javaToPython import JavaToPython
+
 import numpy
 
 class pythonTetris(py_environment.PyEnvironment):
     def __init__(self):
+        self.java_talker = JavaToPython()
         self._action_spec = array_spec.BoundedArraySpec(
             shape=(10, 4), dtype=np.int32, minimum=0, maximum=40, name='play')
         self._observation_spec = array_spec.BoundedArraySpec(
@@ -31,3 +35,5 @@ class pythonTetris(py_environment.PyEnvironment):
 
         # TODO: analyze wall
         # TODO: also, figure out how to get the wall in here
+
+pythonTetris().go_to_location(7, 2)
