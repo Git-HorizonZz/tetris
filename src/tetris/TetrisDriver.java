@@ -25,8 +25,6 @@ public class TetrisDriver
 		GatewayServer gatewayServer = new GatewayServer(new TetrisDriver());
         gatewayServer.start();
         System.out.println("Gateway Server Started");
-		System.out.println("PRINT");
-
 		
 		Tetris tts = new Tetris();
 		JFrame f = tts.f;
@@ -43,7 +41,8 @@ public class TetrisDriver
 		f.addKeyListener(new TetrisActions(game));
 		
 		//runs ai python script
-		Runtime.getRuntime().exec("python src/ai/aiPython.py");
+		Runtime.getRuntime().exec("python src/ai/aiScript.py");
+		// Runtime.getRuntime().exec("echo");
 
 		new Thread() 
 		{

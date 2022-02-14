@@ -6,11 +6,8 @@ import time
 
 class JavaToPython():
 
-    def __init__(self):
-        '''
-        Connects to java script
-        '''
-        self.gateway = JavaGateway()
+    def __init__(self, gateway):
+        self.gateway = gateway
         self.tetris_game = self.gateway.jvm.tetris.TetrisDriver()
         self.actions_obj = self.tetris_game.getActionsObject()
         self.tetris_java = self.tetris_game.getGameUI()
