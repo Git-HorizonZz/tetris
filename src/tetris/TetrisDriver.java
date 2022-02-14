@@ -29,7 +29,7 @@ public class TetrisDriver
 		Tetris tts = new Tetris();
 		JFrame f = tts.f;
 		f.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-		f.setSize(310, 623);
+		f.setSize(330, 653);
 
 		game.startUp();
 		f.add(game);

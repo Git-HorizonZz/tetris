@@ -169,8 +169,8 @@ public class Tetris extends JPanel
 			{
 				wall[pieceOrigin.x + p.x][pieceOrigin.y + p.y] = tetrominoColours[curPiece];
 			}
-			printWall();
 			clearRows();
+			printWall();
 			spawnPiece();
 		}	
 		repaint();
@@ -277,9 +277,7 @@ public class Tetris extends JPanel
 			for(int col=0; col < wall[0].length - 1; col++)
 			{
 				bWall[row][col] = !wall[row][col].equals(Color.GRAY);
-		//		System.out.print(bWall[row][col] = !wall[row][col].equals(Color.GRAY));
 			}
-		//	System.out.println();
 		}
 
 		return bWall;
@@ -302,11 +300,11 @@ public class Tetris extends JPanel
 			{
 				if (pWall[row][col].length() == 4)
 				{
-					System.out.print(" "+pWall[row][col]+" ");
+					System.out.print(" X"); // "X" is printed where a sqaure is covered
 				}
 				else
 				{
-					System.out.print(" "+pWall[row][col]);
+					System.out.print(" O"); // "O" is printed where the square is blank
 				}
 			}
 			System.out.println();
