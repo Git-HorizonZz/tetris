@@ -322,7 +322,7 @@ public class Tetris extends JPanel
 
 	public int getRotation() 
 	{
-		System.out.println(rotation);
+		// System.out.println(rotation);
 		return rotation;
 	}
 }

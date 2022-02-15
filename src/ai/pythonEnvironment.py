@@ -35,5 +35,3 @@ class pythonTetris(py_environment.PyEnvironment):
 
         # TODO: analyze wall
         # TODO: also, figure out how to get the wall in here
-
-pythonTetris().go_to_location(7, 2)

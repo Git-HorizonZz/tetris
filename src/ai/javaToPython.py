@@ -15,6 +15,7 @@ class JavaToPython():
 
 
     def go_to_location(self, x_pos, rotation):
+        self.terminal.println("hello from java talker")
         while self.tetris_java.getRotation() is not rotation:
             if self.tetris_java.getRotation() - rotation < 0:
                 self.actions_obj.rotateClockwise()
