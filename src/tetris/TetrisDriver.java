@@ -41,19 +41,20 @@ public class TetrisDriver
 		f.addKeyListener(new TetrisActions(game));
 		
 		//runs ai python script
-		Runtime.getRuntime().exec("python src/ai/aiScript.py");
+		// Runtime.getRuntime().exec("python src/ai/aiScript.py");
 		// Runtime.getRuntime().exec("echo");
 
 		new Thread() 
 		{
 			public void run() 
 			{
+				System.out.println(tts.getHeight());
 				while (!game.getGameOver()) 
 				{
 					try 
 					{
 						Thread.sleep(speed);
-						game.drop();
+						// game.drop();
 						count++;
 						if (count % 5 == 0 && speed > 200)
 						{

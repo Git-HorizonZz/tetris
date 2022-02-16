@@ -78,12 +78,15 @@ public class Tetris extends JPanel
 	private boolean gameOver = false;
 	private long score = 0;
 	private Color [] [] wall;
+
+	public final int gameWidth = 12;
+	public final int gameHeight = 24;
 	
 	public Tetris() { }
 	
 	public void startUp()
 	{
-		wall = new Color [12] [24];
+		wall = new Color [gameWidth] [gameHeight];
 		for (int i=0; i<12; i++) 
 		{
 			for (int k=0; k<23; k++) 
@@ -342,5 +345,13 @@ public class Tetris extends JPanel
 	{
 		// System.out.println(rotation);
 		return rotation;
+	}
+
+	public byte getWidthBytes(){
+		return  Integer.valueOf(gameWidth).byteValue();
+	}
+
+	public int getHeight(){
+		return gameHeight;
 	}
 }

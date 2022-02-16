@@ -8,10 +8,11 @@ Connects to java script
 gateway = JavaGateway()
 tetris_game = gateway.jvm.tetris.TetrisDriver()
 actions_obj = tetris_game.getActionsObject()
-tetris_java = tetris_game.getGameUI()
+tetris_UI = tetris_game.getGameUI()
 terminal = gateway.jvm.System.out
 
-java = JavaToPython(gateway)
+javaTalker = JavaToPython(gateway)
 
 terminal.println("hello from python")
-java.get_python_wall()
+# javaTalker.get_python_wall()
+print(tetris_UI.getWidth())

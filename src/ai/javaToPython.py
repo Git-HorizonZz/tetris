@@ -21,9 +21,10 @@ class JavaToPython():
         self.terminal.println("got bytes")
         intArray = numpy.frombuffer(byteArray, dtype=numpy.int32)
         self.terminal.println("bytes to ints")
-        finalArray = numpy.reshape(intArray, (wall.length, wall[0].length))
-        self.terminal.println("2d array")
-        return finalArray
+        print(self.tetris_UI.getWidth())
+        # finalArray = numpy.reshape(intArray, (wall.length, wall[0].length))
+        # self.terminal.println("2d array")
+        return intArray
 
     def go_to_location(self, x_pos, rotation):
         self.terminal.println("hello from java talker")
