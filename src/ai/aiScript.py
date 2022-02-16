@@ -14,4 +14,4 @@ terminal = gateway.jvm.System.out
 java = JavaToPython(gateway)
 
 terminal.println("hello from python")
-java.go_to_location(1, 2)
+java.get_python_wall()

@@ -4,6 +4,8 @@ import java.awt.Color;
 import java.awt.Font;
 import java.awt.Graphics;
 import java.awt.Point;
+import java.nio.ByteBuffer;
+import java.nio.ByteOrder;
 import java.util.ArrayList;
 import java.util.Collections;
 
@@ -271,34 +273,51 @@ public class Tetris extends JPanel
 	 * Gets array of where the wall is
 	 * @return false if there is no block. true if there is
 	 */
-	public boolean[][] getWall(){
-		boolean[][] bWall = new boolean[wall.length][wall[0].length];
+	public int[][] getWall(){
+		int[][] bWall = new int[wall.length][wall[0].length];
 		for(int row=0; row < wall.length; row++){
 			for(int col=0; col < wall[0].length - 1; col++)
 			{
-				bWall[row][col] = !wall[row][col].equals(Color.GRAY);
+				if(!wall[row][col].equals(Color.GRAY))
+					bWall[row][col] = 1;
+				else
+					bWall[row][col] = 0;
 			}
 		}
 
 		return bWall;
 	}
 
-	public void printWall()
-	{
-		boolean [][] bW2 = getWall();
-		String [][] pWall = new String[bW2.length][bW2[0].length];
-		for(int row=0; row < bW2.length; row++)
-		{
-			for(int col=0; col < bW2[0].length - 1; col++)
-			{
-				pWall[row][col] = String.valueOf(bW2[row][col]);
+	public byte[] getByteArray(int[][] intArray) {
+		int iMax = intArray.length;
+		int jMax = intArray[0].length;
+
+		// Set up a ByteBuffer called intBuffer
+		ByteBuffer intBuffer = ByteBuffer.allocate(4*iMax*jMax); // 4 bytes in an int
+		intBuffer.order(ByteOrder.LITTLE_ENDIAN); // Java's default is big-endian
+	
+		// Copy ints from intArray into intBuffer as bytes
+		for (int i = 0; i < iMax; i++) {
+			for (int j = 0; j < jMax; j++){
+				intBuffer.putInt(intArray[i][j]);
 			}
 		}
+	
+		// Convert the ByteBuffer to a byte array and return it
+		byte[] byteArray = intBuffer.array();
+
+		System.out.println("converted to bytes");
+		return byteArray;
+	}
+
+	public void printWall()
+	{
+		int [][] bW2 = getWall();
 		for(int row=0; row < wall.length; row++)
 		{
 			for(int col=wall[0].length-2; col >= 0; col--)
 			{
-				if (pWall[row][col].length() == 4)
+				if (bW2[row][col] == 1)
 				{
 					System.out.print(" X"); // "X" is printed where a sqaure is covered
 				}
