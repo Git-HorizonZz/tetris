@@ -42,19 +42,18 @@ public class TetrisDriver
 		
 		//runs ai python script
 		// Runtime.getRuntime().exec("python src/ai/aiScript.py");
-		// Runtime.getRuntime().exec("echo");
 
 		new Thread() 
 		{
 			public void run() 
 			{
-				System.out.println(tts.getHeight());
+				System.out.println(tts.getGameHeight());
 				while (!game.getGameOver()) 
 				{
 					try 
 					{
 						Thread.sleep(speed);
-						// game.drop();
+						game.drop();
 						count++;
 						if (count % 5 == 0 && speed > 200)
 						{

@@ -81,6 +81,8 @@ public class Tetris extends JPanel
 
 	public final int gameWidth = 12;
 	public final int gameHeight = 24;
+
+	private boolean isColliding = false;
 	
 	public Tetris() { }
 	
@@ -166,6 +168,7 @@ public class Tetris extends JPanel
 		if (!collidesAt(pieceOrigin.x, pieceOrigin.y + 1, rotation)) 
 		{
 			pieceOrigin.y += 1;
+			isColliding = false;
 		} 
 		else 
 		{
@@ -173,8 +176,9 @@ public class Tetris extends JPanel
 			{
 				wall[pieceOrigin.x + p.x][pieceOrigin.y + p.y] = tetrominoColours[curPiece];
 			}
+			isColliding = true;
 			clearRows();
-			printWall();
+			// printWall();
 			spawnPiece();
 		}	
 		repaint();
@@ -276,7 +280,7 @@ public class Tetris extends JPanel
 	 * @return false if there is no block. true if there is
 	 */
 	public int[][] getWall(){
-		int[][] bWall = new int[wall.length][wall[0].length];
+		int[][] bWall = new int[wall.length][wall[0].length - 1];
 		for(int row=0; row < wall.length; row++){
 			for(int col=0; col < wall[0].length - 1; col++)
 			{
@@ -351,7 +355,15 @@ public class Tetris extends JPanel
 		return  Integer.valueOf(gameWidth).byteValue();
 	}
 
-	public int getHeight(){
+	public int getGameHeight(){
 		return gameHeight;
+	}
+
+	public int getGameWidth(){
+		return gameWidth;
+	}
+
+	public boolean getColliding(){
+		return isColliding;
 	}
 }

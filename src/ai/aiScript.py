@@ -14,5 +14,7 @@ terminal = gateway.jvm.System.out
 javaTalker = JavaToPython(gateway)
 
 terminal.println("hello from python")
-# javaTalker.get_python_wall()
-print(tetris_UI.getWidth())
+
+while True:
+    if tetris_UI.getColliding():
+        print(javaTalker.get_python_wall())
