@@ -47,7 +47,6 @@ public class TetrisDriver
 		{
 			public void run() 
 			{
-				System.out.println(tts.getGameHeight());
 				while (!game.getGameOver()) 
 				{
 					try 

@@ -25,6 +25,9 @@ class JavaToPython():
         finalArray = numpy.reshape(intArray, (self.tetris_UI.getGameWidth(), self.tetris_UI.getGameHeight() - 1))
         self.terminal.println("2d array")
         return finalArray
+    
+    def get_episode_over(self):
+        return self.tetris_UI.getGameOver()
 
     def go_to_location(self, x_pos, rotation):
         self.terminal.println("hello from java talker")
