@@ -2,6 +2,8 @@ from py4j.java_gateway import JavaGateway
 
 from javaToPython import JavaToPython
 
+import time
+
 '''
 Connects to java script
 '''
@@ -16,5 +18,7 @@ javaTalker = JavaToPython(gateway)
 terminal.println("hello from python")
 
 while True:
-    if tetris_UI.getColliding():
-        print(javaTalker.get_python_wall())
+    print(javaTalker.get_episode_over())
+    if javaTalker.get_episode_over():
+        javaTalker.restart()
+    time.sleep(1)

@@ -76,6 +76,7 @@ public class Tetris extends JPanel
 	private int county;
 	private ArrayList <Integer> next = new ArrayList <Integer>();
 	private boolean gameOver = false;
+	private boolean episodeOver = false;
 	private long score = 0;
 	private Color [] [] wall;
 
@@ -122,7 +123,7 @@ public class Tetris extends JPanel
 		next.remove(0);
 		if (collidesAt(pieceOrigin.x, pieceOrigin.y + 1, rotation)) 
 		{
-			gameOver = true;
+			episodeOver = true;
 			county++;
 			repaint();
 		}	
@@ -336,6 +337,11 @@ public class Tetris extends JPanel
 		}
 		System.out.println();
 	}
+
+	public void newEpisode(){
+		startUp();
+		episodeOver = false;
+	}
 	
 	public int getX(){
 		return pieceOrigin.x;
@@ -365,5 +371,9 @@ public class Tetris extends JPanel
 
 	public boolean getColliding(){
 		return isColliding;
+	}
+
+	public boolean getEpisodeOver(){
+		return episodeOver;
 	}
 }

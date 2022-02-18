@@ -27,7 +27,10 @@ class JavaToPython():
         return finalArray
     
     def get_episode_over(self):
-        return self.tetris_UI.getGameOver()
+        return self.tetris_UI.getEpisodeOver()
+
+    def restart(self):
+        self.tetris_UI.newEpisode()
 
     def go_to_location(self, x_pos, rotation):
         self.terminal.println("hello from java talker")

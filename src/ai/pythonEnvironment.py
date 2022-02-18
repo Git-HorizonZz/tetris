@@ -35,4 +35,13 @@ class pythonTetris(py_environment.PyEnvironment):
         if self._episode_ended:
             return self.reset()
 
+        if self.java_talker.get_episode_over():
+            self.java_talker.restart()
+            self._episode_ended = True
+            return ts.termination(np.array([self._state], dtype=np.int32), -1)
+        else:
+            self._state = self.java_talker.get_python_wall()
+
+            
+
         # TODO: analyze wall
