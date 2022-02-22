@@ -79,6 +79,7 @@ public class Tetris extends JPanel
 	private boolean episodeOver = false;
 	private long score = 0;
 	private Color [] [] wall;
+	private long deltaScore = 0;
 
 	public final int gameWidth = 12;
 	public final int gameHeight = 24;
@@ -214,22 +215,23 @@ public class Tetris extends JPanel
 				numClears += 1;
 			}
 		}
-		
+		deltaScore = 0;
 		switch (numClears)
 		{
 			case 1:
-				score += 100;
+				deltaScore = 100;
 				break;
 			case 2:
-				score += 300;
+				deltaScore = 300;
 				break;
 			case 3:
-				score += 500;
+				deltaScore = 500;
 				break;
 			case 4:
-				score += 800;
+				deltaScore = 800;
 				break;
 		}
+		score += deltaScore;
 	}
 	
 	public void paintComponent(Graphics g)
@@ -373,7 +375,17 @@ public class Tetris extends JPanel
 		return isColliding;
 	}
 
+	public void stopColliding(){
+		isColliding = false;
+	}
+
 	public boolean getEpisodeOver(){
 		return episodeOver;
+	}
+
+	public long getDeltaScore(){
+		long dScore = deltaScore;
+		deltaScore = 0;
+		return dScore;
 	}
 }

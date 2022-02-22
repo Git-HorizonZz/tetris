@@ -31,6 +31,19 @@ class JavaToPython():
 
     def restart(self):
         self.tetris_UI.newEpisode()
+        
+    def get_reward(self):
+        if self.tetris_UI.getDeltaScore() != 0:
+            return self.tetris_UI.getDeltaScore() / 200
+        else:
+            return 0.05
+    
+    def just_collided(self):
+        if self.tetris_UI.getColliding():
+            self.tetris_UI.stopColliding()
+            return True
+        else:
+            return False
 
     def go_to_location(self, x_pos, rotation):
         self.terminal.println("hello from java talker")

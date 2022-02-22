@@ -10,6 +10,8 @@ from javaToPython import JavaToPython
 
 import numpy as np
 
+from waiting import wait
+
 class pythonTetris(py_environment.PyEnvironment):
     def __init__(self):
         self.java_talker = JavaToPython()
@@ -32,16 +34,25 @@ class pythonTetris(py_environment.PyEnvironment):
         return ts.restart(np.array([self._state], dtype=np.int32))
 
     def _step(self, action):
+        
+        # only run step logic right after the piece lands
+        # Restarts if episode is over
         if self._episode_ended:
             return self.reset()
 
         if self.java_talker.get_episode_over():
+            # If episode is over, let environment know and give punishment of -1
             self.java_talker.restart()
             self._episode_ended = True
             return ts.termination(np.array([self._state], dtype=np.int32), -1)
         else:
+            # Otherwise decide action and see wall
+            self.java_talker.go_to_location(action[0], action[1])
             self._state = self.java_talker.get_python_wall()
-
             
-
-        # TODO: analyze wall
+            # Waits to give reward until newest block collides
+            wait(lambda: self.java_talker.just_collided(), sleep_seconds=0.01)
+            return ts.transition(
+                np.array([self._state], dtype=np.int32),
+                reward=self.java_talker.get_reward(),
+                discount=1.0)
