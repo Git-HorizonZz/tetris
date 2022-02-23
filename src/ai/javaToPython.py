@@ -43,6 +43,7 @@ class JavaToPython():
             self.tetris_UI.stopColliding()
             return True
         else:
+            self.actions_obj.dropDown()
             return False
 
     def go_to_location(self, x_pos, rotation):
