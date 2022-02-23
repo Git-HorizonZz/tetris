@@ -13,8 +13,8 @@ import numpy as np
 from waiting import wait
 
 class pythonTetris(py_environment.PyEnvironment):
-    def __init__(self):
-        self.java_talker = JavaToPython()
+    def __init__(self, java_talker):
+        self.java_talker = java_talker
         self._action_spec = array_spec.BoundedArraySpec(
             shape=(10, 4), dtype=np.int32, minimum=0, maximum=40, name='play')
         self._observation_spec = array_spec.BoundedArraySpec(
