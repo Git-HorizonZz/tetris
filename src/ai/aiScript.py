@@ -28,7 +28,6 @@ terminal.println("hello from python")
 print("python")
 python_env = pythonTetris(javaTalker)
 
-utils.validate_py_environment(python_env, episodes=5)
 # tf_env = tf_py_environment.TFPyEnvironment(python_env)
 
 
@@ -38,11 +37,12 @@ utils.validate_py_environment(python_env, episodes=5)
 # print('time_step_spec.discount:', tf_env.time_step_spec().discount)
 # print('time_step_spec.reward:', tf_env.time_step_spec().reward)
 
-# action = np.array((10,4), dtype=np.int32)
-# time_step = tf_env.reset()
-# print(time_step)
-# while not time_step.is_last():
-#   time_step = tf_env.step(action)
+action = np.array((8,4), dtype=np.int32)
+time_step = python_env._reset()
+# # print(time_step)
+while not time_step.is_last():
+# # time.sleep(1)
+    time_step = python_env.step(action)
 #   print(time_step)
 
 # rewards = []
@@ -63,7 +63,7 @@ utils.validate_py_environment(python_env, episodes=5)
 #     rewards.append(reward_t)
 #     steps.append(steps_t)
 
-tf_env.close()
+# tf_env.close()
 
 # while True:
 #     print(javaTalker.get_episode_over())

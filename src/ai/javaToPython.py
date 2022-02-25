@@ -47,18 +47,25 @@ class JavaToPython():
             return False
 
     def go_to_location(self, x_pos, rotation):
-        self.terminal.println("hello from java talker")
-        while self.tetris_UI.getRotation() is not rotation:
-            if self.tetris_UI.getRotation() - rotation < 0:
+        rotation = rotation % 4
+        rot = rotation.item()
+        x = x_pos.item()
+        print("moving")
+        while self.tetris_UI.getRotation() is not rot:
+            print("REAL: " + str(type(self.tetris_UI.getRotation())) + "  GOAL: " + str(type(rot)))
+            if self.tetris_UI.getRotation() - rot < 0:
                 self.actions_obj.rotateClockwise()
             else:
                 self.actions_obj.rotateCounterClockwise()
             time.sleep(0.1)
         
-        while self.tetris_UI.getX() != x_pos:
-            if self.tetris_UI.getX() > x_pos:
+        while self.tetris_UI.getX() != x:
+            print("REAL: " + str((self.tetris_UI.getX())) + "  GOAL: " + str((x)))
+            if self.tetris_UI.getX() > x:
                 self.actions_obj.moveLeft()
             else:
                 self.actions_obj.moveRight()
             time.sleep(0.1)
+
+        print("correct pos")
 

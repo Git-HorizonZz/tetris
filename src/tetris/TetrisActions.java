@@ -58,29 +58,29 @@ public class TetrisActions implements KeyListener {
 	
 	public void keyReleased(KeyEvent e) { }
 	
-	public static void moveRight()
+	public void moveRight()
     {
-        robot.keyPress(KeyEvent.VK_RIGHT);
+        game.move(+1);
     }
 
-    public static void moveLeft()
+    public void moveLeft()
     {
-        robot.keyPress(KeyEvent.VK_LEFT);
+        game.move(-1);
     }
 
-    public static void rotateClockwise()
+    public void rotateClockwise()
     {
-        robot.keyPress(KeyEvent.VK_DOWN);
+        game.rotate(+1);
     }
 
-    public static void rotateCounterClockwise()
+    public void rotateCounterClockwise()
     {
-        robot.keyPress(KeyEvent.VK_UP);
+		game.rotate(-1);
     }
 
-    public static void dropDown()
+    public void dropDown()
     {
-        robot.keyPress(KeyEvent.VK_SPACE);
+        game.drop();
     }
 
 }
