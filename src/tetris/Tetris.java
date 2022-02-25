@@ -110,7 +110,6 @@ public class Tetris extends JPanel
 			}
 		}
 		county = 0;
-		// printWall();
 		spawnPiece();
 	}
 	
@@ -192,7 +191,6 @@ public class Tetris extends JPanel
 				wall2[pieceOrigin.x + p.x][pieceOrigin.y + p.y] = 1;
 			}
 			clearRows();
-			// printWall();
 			spawnPiece();
 		}	
 		repaint();
