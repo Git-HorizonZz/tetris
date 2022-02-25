@@ -296,20 +296,9 @@ public class Tetris extends JPanel
 	 * Gets array of where the wall is
 	 * @return false if there is no block. true if there is
 	 */
-	public int[][] getWall(){
-		int[][] bWall = new int[wall.length][wall[0].length - 1];
-		for(int row=0; row < wall.length; row++){
-			for(int col=0; col < wall[0].length - 1; col++)
-			{
-			//	if(!wall2[row][col].equals(Color.GRAY))
-				if (wall2[row][col] == 1)
-					bWall[row][col] = 1;
-				else
-					bWall[row][col] = 0;
-			}
-		}
-
-		return bWall;
+	public int[][] getWall()
+	{
+		return wall2;
 	}
 
 	public byte[] getByteArray(int[][] intArray) {
