@@ -79,7 +79,7 @@ public class Tetris extends JPanel
 	private boolean episodeOver = false;
 	private long score = 0;
 	private Color [] [] wall;
-	private Color [] [] wall2; //clone wall to feed to ai
+	private int [] [] wall2; //clone wall to feed to ai
 	private long deltaScore = 0;
 
 	public final int gameWidth = 12;
@@ -92,7 +92,7 @@ public class Tetris extends JPanel
 	public void startUp()
 	{
 		wall = new Color [gameWidth] [gameHeight];
-		wall2 = new Color [gameWidth] [gameHeight];
+		wall2 = new int [gameWidth] [gameHeight];
 		for (int i=0; i<12; i++) 
 		{
 			for (int k=0; k<23; k++) 
@@ -100,12 +100,12 @@ public class Tetris extends JPanel
 				if (i==0 || i==11 || k==0 || k==22) 
 				{
 					wall [i] [k] = Color.BLACK;
-					wall2 [i] [k] = Color.BLACK;
+					wall2 [i] [k] = 1;
 				}
 				else 
 				{
 					wall [i] [k] = Color.GRAY;
-					wall2 [i] [k] = Color.GRAY;
+					wall2 [i] [k] = 0;
 				}
 			}
 		}
@@ -130,7 +130,16 @@ public class Tetris extends JPanel
 			episodeOver = true;
 			county++;
 			repaint();
-		}	
+		}
+		for (Point p : Tetrominos [curPiece] [rotation])
+		{
+			wall2[pieceOrigin.x + p.x][pieceOrigin.y + p.y] = 1;
+		}
+		printWall();
+		for (Point p : Tetrominos [curPiece] [rotation])
+		{
+			wall2[pieceOrigin.x + p.x][pieceOrigin.y + p.y] = 0;
+		}
 	}
 	
 	private boolean collidesAt(int x, int y, int rotation)
@@ -180,11 +189,11 @@ public class Tetris extends JPanel
 			for (Point p : Tetrominos [curPiece] [rotation])
 			{
 				wall[pieceOrigin.x + p.x][pieceOrigin.y + p.y] = tetrominoColours[curPiece];
-				wall2[pieceOrigin.x + p.x][pieceOrigin.y + p.y] = tetrominoColours[curPiece];
+				wall2[pieceOrigin.x + p.x][pieceOrigin.y + p.y] = 1;
 			}
 			isColliding = true;
 			clearRows();
-			printWall();
+			// printWall();
 			spawnPiece();
 		}	
 		repaint();
@@ -292,7 +301,8 @@ public class Tetris extends JPanel
 		for(int row=0; row < wall.length; row++){
 			for(int col=0; col < wall[0].length - 1; col++)
 			{
-				if(!wall[row][col].equals(Color.GRAY))
+			//	if(!wall2[row][col].equals(Color.GRAY))
+				if (wall2[row][col] == 1)
 					bWall[row][col] = 1;
 				else
 					bWall[row][col] = 0;
