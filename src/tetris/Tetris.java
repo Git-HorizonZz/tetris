@@ -85,7 +85,7 @@ public class Tetris extends JPanel
 	public final int gameWidth = 12;
 	public final int gameHeight = 24;
 
-	private boolean isColliding = false;
+	private boolean isSpawned = false;
 	
 	public Tetris() { }
 	
@@ -136,6 +136,7 @@ public class Tetris extends JPanel
 			wall2[pieceOrigin.x + p.x][pieceOrigin.y + p.y] = 1;
 		}
 		printWall();
+		isSpawned = true;
 		for (Point p : Tetrominos [curPiece] [rotation])
 		{
 			wall2[pieceOrigin.x + p.x][pieceOrigin.y + p.y] = 0;
@@ -182,7 +183,6 @@ public class Tetris extends JPanel
 		if (!collidesAt(pieceOrigin.x, pieceOrigin.y + 1, rotation)) 
 		{
 			pieceOrigin.y += 1;
-			isColliding = false;
 		} 
 		else 
 		{
@@ -191,7 +191,6 @@ public class Tetris extends JPanel
 				wall[pieceOrigin.x + p.x][pieceOrigin.y + p.y] = tetrominoColours[curPiece];
 				wall2[pieceOrigin.x + p.x][pieceOrigin.y + p.y] = 1;
 			}
-			isColliding = true;
 			clearRows();
 			// printWall();
 			spawnPiece();
@@ -298,7 +297,8 @@ public class Tetris extends JPanel
 	 */
 	public int[][] getWall()
 	{
-		return wall2;
+		int [][] wall3 = wall2;
+		return wall3;
 	}
 
 	public byte[] getByteArray(int[][] intArray) {
@@ -376,11 +376,11 @@ public class Tetris extends JPanel
 	}
 
 	public boolean getColliding(){
-		return isColliding;
+		return isSpawned;
 	}
 
 	public void stopColliding(){
-		isColliding = false;
+		isSpawned = false;
 	}
 
 	public boolean getEpisodeOver(){
