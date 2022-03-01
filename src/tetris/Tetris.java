@@ -124,21 +124,24 @@ public class Tetris extends JPanel
 		}
 		curPiece = next.get(0);
 		next.remove(0);
-		if (collidesAt(pieceOrigin.x, pieceOrigin.y + 1, rotation)) 
-		{
-			episodeOver = true;
-			county++;
-			repaint();
-		}
+		
 		for (Point p : Tetrominos [curPiece] [rotation])
 		{
 			wall2[pieceOrigin.x + p.x][pieceOrigin.y + p.y] = 1;
 		}
-		printWall();
+		// printWall();
 		isSpawned = true;
 		for (Point p : Tetrominos [curPiece] [rotation])
 		{
 			wall2[pieceOrigin.x + p.x][pieceOrigin.y + p.y] = 0;
+		}
+
+		if (collidesAt(pieceOrigin.x, pieceOrigin.y + 1, rotation)) 
+		{
+			System.out.println("game over");
+			episodeOver = true;
+			county++;
+			repaint();
 		}
 	}
 	
