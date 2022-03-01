@@ -41,7 +41,7 @@ public class TetrisDriver
 		f.addKeyListener(new TetrisActions(game));
 		
 		//runs ai python script
-		Runtime.getRuntime().exec("python src/ai/aiScript.py");
+		// Runtime.getRuntime().exec("python src/ai/aiScript.py");
 
 		new Thread() 
 		{

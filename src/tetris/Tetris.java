@@ -393,4 +393,20 @@ public class Tetris extends JPanel
 		deltaScore = 0;
 		return dScore;
 	}
+
+	public boolean canMoveRight()
+	{
+		if (!collidesAt(pieceOrigin.x + 1, pieceOrigin.y, rotation)) 
+			return true;
+		else
+			return false;
+	}
+
+	public boolean canMoveLeft()
+	{
+		if (!collidesAt(pieceOrigin.x - 1, pieceOrigin.y, rotation)) 
+			return true;
+		else
+			return false;
+	}
 }

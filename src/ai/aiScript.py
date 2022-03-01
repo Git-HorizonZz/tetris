@@ -38,12 +38,15 @@ python_env = pythonTetris(javaTalker)
 # print('time_step_spec.reward:', tf_env.time_step_spec().reward)
 
 action = np.array((8,4), dtype=np.int32)
-time_step = python_env._reset()
+
 # # print(time_step)
-while not time_step.is_last():
-# # time.sleep(1)
-    time_step = python_env.step(action)
-#   print(time_step)
+for _ in range(5):
+    time_step = python_env._reset()
+    while not time_step.is_last():
+    # # time.sleep(1)
+        terminal.println("new step")
+        time_step = python_env.step(action)
+    #   print(time_step)
 
 # rewards = []
 # steps = []

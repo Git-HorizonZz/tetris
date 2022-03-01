@@ -53,7 +53,7 @@ class pythonTetris(tf_py_environment.TFPyEnvironment):
             self._state = self.java_talker.get_python_wall()
             
             # Waits to give reward until newest block collides
-            wait(lambda: self.java_talker.just_collided(), sleep_seconds=0.01)
+            wait(lambda: self.java_talker.just_collided(), sleep_seconds=0.1)
             return ts.transition(
                 np.array([self._state], dtype=np.int32),
                 reward=self.java_talker.get_reward(),

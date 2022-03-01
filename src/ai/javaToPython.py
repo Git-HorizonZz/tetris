@@ -16,14 +16,9 @@ class JavaToPython():
 
     def get_python_wall(self):
         wall = self.tetris_UI.getWall()
-        self.terminal.println("J2P")
         byteArray = self.tetris_UI.getByteArray(wall)
-        self.terminal.println("got bytes")
         intArray = numpy.frombuffer(byteArray, dtype=numpy.int32)
-        self.terminal.println("bytes to ints")
-        print(self.tetris_UI.getWidth())
-        finalArray = numpy.reshape(intArray, (self.tetris_UI.getGameWidth(), self.tetris_UI.getGameHeight() - 1))
-        self.terminal.println("2d array")
+        finalArray = numpy.reshape(intArray, (self.tetris_UI.getGameWidth(), self.tetris_UI.getGameHeight()))
         return finalArray
     
     def get_episode_over(self):
@@ -39,10 +34,12 @@ class JavaToPython():
             return 0.05
     
     def just_collided(self):
+        self.terminal.println("colliding?")
         if self.tetris_UI.getColliding():
             self.tetris_UI.stopColliding()
             return True
         else:
+            self.terminal.println("not collided")
             self.actions_obj.dropDown()
             return False
 
@@ -60,12 +57,18 @@ class JavaToPython():
             time.sleep(0.1)
         
         while self.tetris_UI.getX() != x:
-            print("REAL: " + str((self.tetris_UI.getX())) + "  GOAL: " + str((x)))
+            self.terminal.println("REAL: " + str((self.tetris_UI.getX())) + "  GOAL: " + str((x)))
             if self.tetris_UI.getX() > x:
+                if not self.tetris_UI.canMoveLeft():
+                    self.terminal.println("correct pos")
+                    return
                 self.actions_obj.moveLeft()
             else:
+                if not self.tetris_UI.canMoveRight():
+                    print("correct pos")
+                    return
                 self.actions_obj.moveRight()
             time.sleep(0.1)
 
-        print("correct pos")
+        self.terminal.println("correct pos")
 
