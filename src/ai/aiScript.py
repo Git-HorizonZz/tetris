@@ -40,31 +40,31 @@ python_env = pythonTetris(javaTalker)
 action = np.array((8,4), dtype=np.int32)
 
 # # print(time_step)
-for _ in range(5):
-    time_step = python_env._reset()
-    while not time_step.is_last():
-    # # time.sleep(1)
-        terminal.println("new step")
-        time_step = python_env.step(action)
-    #   print(time_step)
+# for _ in range(5):
+#     time_step = python_env._reset()
+#     while not time_step.is_last():
+#     # # time.sleep(1)
+#         terminal.println("new step")
+#         time_step = python_env.step(action)
+#     #   print(time_step)
 
-# rewards = []
-# steps = []
-# number_of_episodes = 2
+rewards = []
+steps = []
+number_of_episodes = 2
 
-# for _ in range(number_of_episodes):
-#     reward_t = 0
-#     steps_t = 0
-#     tf_env.reset()
-#     while True:
-#         action = tf.random.uniform([10,4], 0, 10, dtype=tf.int32)
-#         next_time_step = tf_env.step(action)
-#         if tf_env.current_time_step().is_last():
-#             break
-#         steps_t += 1
-#         reward_t += next_time_step.reward.numpy()
-#     rewards.append(reward_t)
-#     steps.append(steps_t)
+for _ in range(number_of_episodes):
+    reward_t = 0
+    steps_t = 0
+    python_env.reset()
+    while True:
+        action = tf.random.uniform([10,4], 0, 10, dtype=tf.int32)
+        next_time_step = python_env.step(action)
+        if python_env.current_time_step().is_last():
+            break
+        steps_t += 1
+        reward_t += next_time_step.reward.numpy()
+    rewards.append(reward_t)
+    steps.append(steps_t)
 
 # tf_env.close()
 
