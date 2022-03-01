@@ -45,11 +45,11 @@ class JavaToPython():
 
     def go_to_location(self, x_pos, rotation):
         rotation = rotation % 4
-        rot = rotation.item()
-        x = x_pos.item()
+        rot = rotation#.item()
+        x = x_pos#.item()
         print("moving")
         while self.tetris_UI.getRotation() is not rot:
-            print("REAL: " + str(type(self.tetris_UI.getRotation())) + "  GOAL: " + str(type(rot)))
+            print("REAL: " + str((self.tetris_UI.getRotation())) + "  GOAL: " + str((rot)))
             if self.tetris_UI.getRotation() - rot < 0:
                 self.actions_obj.rotateClockwise()
             else:

@@ -49,6 +49,7 @@ class pythonTetris(tf_py_environment.TFPyEnvironment):
         else:
             print("step!")
             # Otherwise decide action and see wall
+            print(action)
             self.java_talker.go_to_location(action[0], action[1])
             self._state = self.java_talker.get_python_wall()
             
