@@ -3,6 +3,7 @@ import tensorflow as tf
 print("tf import finished")
 
 from tf_agents.environments import tf_py_environment
+from tf_agents.environments import py_environment
 from tf_agents.specs import array_spec
 from tf_agents.trajectories import time_step as ts
 
@@ -12,7 +13,7 @@ import numpy as np
 
 from waiting import wait
 
-class pythonTetris(tf_py_environment.TFPyEnvironment):
+class pythonTetris(py_environment.PyEnvironment):
     def __init__(self, java_talker):
         self.java_talker = java_talker
         self._action_spec = array_spec.BoundedArraySpec(
@@ -47,9 +48,9 @@ class pythonTetris(tf_py_environment.TFPyEnvironment):
             self._episode_ended = True
             return ts.termination(np.array([self._state], dtype=np.int32), -1)
         else:
-            print("step!")
+            # print("step!")
             # Otherwise decide action and see wall
-            print(action)
+            # print(action)
             self.java_talker.go_to_location(action[0], action[1])
             self._state = self.java_talker.get_python_wall()
             

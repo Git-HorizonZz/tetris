@@ -27,6 +27,7 @@ terminal.println("hello from python")
 
 print("python")
 python_env = pythonTetris(javaTalker)
+python_env.reset()
 
 # tf_env = tf_py_environment.TFPyEnvironment(python_env)
 
@@ -52,19 +53,19 @@ rewards = []
 steps = []
 number_of_episodes = 2
 
+
 for _ in range(number_of_episodes):
     reward_t = 0
     steps_t = 0
-    python_env.reset()
-    while True:
-        action = tf.random.uniform([10,4], 0, 10, dtype=tf.int32)
+    while not python_env.current_time_step().is_last():
+        action = [np.random.randint(0,10), np.random.randint(0,4)]
         next_time_step = python_env.step(action)
-        if python_env.current_time_step().is_last():
-            break
+        print("step done")
         steps_t += 1
-        reward_t += next_time_step.reward.numpy()
+        reward_t += next_time_step.reward#.numpy()
     rewards.append(reward_t)
     steps.append(steps_t)
+    python_env.reset()
 
 # tf_env.close()
 
