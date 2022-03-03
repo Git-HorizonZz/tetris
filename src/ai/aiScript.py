@@ -40,15 +40,6 @@ python_env.reset()
 
 action = np.array((8,4), dtype=np.int32)
 
-# # print(time_step)
-# for _ in range(5):
-#     time_step = python_env._reset()
-#     while not time_step.is_last():
-#     # # time.sleep(1)
-#         terminal.println("new step")
-#         time_step = python_env.step(action)
-#     #   print(time_step)
-
 rewards = []
 steps = []
 number_of_episodes = 2
@@ -68,9 +59,3 @@ for _ in range(number_of_episodes):
     python_env.reset()
 
 # tf_env.close()
-
-# while True:
-#     print(javaTalker.get_episode_over())
-#     if javaTalker.get_episode_over():
-#         javaTalker.restart()
-#     time.sleep(1)
