@@ -17,9 +17,9 @@ class pythonTetris(py_environment.PyEnvironment):
     def __init__(self, java_talker):
         self.java_talker = java_talker
         self._action_spec = array_spec.BoundedArraySpec(
-            shape=(8, 4), dtype=np.int32, minimum=0, maximum=40, name='play')
+            shape=(2,), dtype=np.int64, minimum=[0,0], maximum=[10,4], name='play')
         self._observation_spec = array_spec.BoundedArraySpec(
-            shape=(12,23), dtype=np.int32, minimum=0, maximum=1, name='board')
+            shape=(1, 12,23), dtype=np.int32, minimum=0, maximum=1, name='board')
         self._state = np.zeros(shape=(12,23))
         self._episode_ended = False
 
@@ -48,7 +48,7 @@ class pythonTetris(py_environment.PyEnvironment):
             self._episode_ended = True
             return ts.termination(np.array([self._state], dtype=np.int32), -1)
         else:
-            # print("step!")
+            print("step!")
             # Otherwise decide action and see wall
             # print(action)
             self.java_talker.go_to_location(action[0], action[1])

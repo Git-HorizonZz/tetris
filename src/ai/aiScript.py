@@ -10,6 +10,8 @@ import numpy as np
 from tf_agents.environments import tf_py_environment
 from tf_agents.environments import utils
 
+from tf_agents.specs import BoundedArraySpec
+
 import time
 
 '''
@@ -31,6 +33,8 @@ python_env.reset()
 
 # tf_env = tf_py_environment.TFPyEnvironment(python_env)
 
+utils.validate_py_environment(python_env)
+
 
 # print('action_spec:', tf_env.action_spec())
 # print('time_step_spec.observation:', tf_env.time_step_spec().observation)
@@ -38,24 +42,30 @@ python_env.reset()
 # print('time_step_spec.discount:', tf_env.time_step_spec().discount)
 # print('time_step_spec.reward:', tf_env.time_step_spec().reward)
 
-action = np.array((8,4), dtype=np.int32)
+action = np.array((2,), dtype=np.int32)
+action_test= BoundedArraySpec(shape=(2,), dtype=np.int32, minimum=[0,0], maximum=[10,4], name='play')
+
 
 rewards = []
 steps = []
 number_of_episodes = 2
 
 
-for _ in range(number_of_episodes):
-    reward_t = 0
-    steps_t = 0
-    while not python_env.current_time_step().is_last():
-        action = [np.random.randint(0,10), np.random.randint(0,4)]
-        next_time_step = python_env.step(action)
-        print("step done")
-        steps_t += 1
-        reward_t += next_time_step.reward#.numpy()
-    rewards.append(reward_t)
-    steps.append(steps_t)
-    python_env.reset()
+# for _ in range(number_of_episodes):
+#     reward_t = 0
+#     steps_t = 0
+#     while not tf_env.current_time_step().is_last():
+#         # action_test = action_test.from_array(np.array([np.random.randint(0,10), np.random.randint(0,4)], np.int32), name='play')
+
+#         print(action_test)
+
+#         action = [np.random.randint(0,10), np.random.randint(0,4)]
+#         next_time_step = tf_env.step(action)
+#         # print(tf_env.time_step_spec().reward)
+#         steps_t += 1
+#         reward_t += next_time_step.reward#.numpy()
+#     rewards.append(reward_t)
+#     steps.append(steps_t)
+#     tf_env.reset()
 
 # tf_env.close()
