@@ -17,10 +17,10 @@ class pythonTetris(py_environment.PyEnvironment):
     def __init__(self, java_talker):
         self.java_talker = java_talker
         self._action_spec = array_spec.BoundedArraySpec(
-            shape=(2,), dtype=np.int64, minimum=[0,0], maximum=[10,4], name='play')
+            shape=(), dtype=np.int64, minimum=0, maximum=39, name='play')
         self._observation_spec = array_spec.BoundedArraySpec(
-            shape=(1, 12,23), dtype=np.int32, minimum=0, maximum=1, name='board')
-        self._state = np.zeros(shape=(12,23))
+            shape=(12,24), dtype=np.int32, minimum=0, maximum=1, name='observation')
+        self._state = np.zeros(shape=(12,24))
         self._episode_ended = False
 
     def action_spec(self):
@@ -31,9 +31,9 @@ class pythonTetris(py_environment.PyEnvironment):
 
     def _reset(self):
         self.java_talker.restart()
-        self._state = np.zeros(shape=(12,23))
+        self._state = np.zeros(shape=(12,24))
         self._episode_ended = False
-        return ts.restart(np.array([self._state], dtype=np.int32))
+        return ts.restart(np.array(self._state, dtype=np.int32))
 
     def _step(self, action):
             
@@ -46,17 +46,20 @@ class pythonTetris(py_environment.PyEnvironment):
             # If episode is over, let environment know and give punishment of -1
             self.java_talker.restart()
             self._episode_ended = True
-            return ts.termination(np.array([self._state], dtype=np.int32), -1)
+            return ts.termination(np.array(self._state, dtype=np.int32), -1)
         else:
             print("step!")
             # Otherwise decide action and see wall
             # print(action)
-            self.java_talker.go_to_location(action[0], action[1])
+            self.java_talker.go_to_location(action)
             self._state = self.java_talker.get_python_wall()
             
+            print(self._state)
+
             # Waits to give reward until newest block collides
+            print("waiting")
             wait(lambda: self.java_talker.just_collided(), sleep_seconds=0.1)
             return ts.transition(
-                np.array([self._state], dtype=np.int32),
+                np.array(self._state, dtype=np.int32),
                 reward=self.java_talker.get_reward(),
                 discount=1.0)
