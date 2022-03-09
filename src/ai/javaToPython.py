@@ -19,7 +19,7 @@ class JavaToPython():
         byteArray = self.tetris_UI.getByteArray(wall)
         intArray = numpy.frombuffer(byteArray, dtype=numpy.int32)
         finalArray = numpy.reshape(intArray, (self.tetris_UI.getGameWidth(), self.tetris_UI.getGameHeight()))
-        return finalArray
+        return intArray
     
     def get_episode_over(self):
         return self.tetris_UI.getEpisodeOver()

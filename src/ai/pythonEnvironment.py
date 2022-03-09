@@ -19,8 +19,8 @@ class pythonTetris(py_environment.PyEnvironment):
         self._action_spec = array_spec.BoundedArraySpec(
             shape=(), dtype=np.int64, minimum=0, maximum=39, name='play')
         self._observation_spec = array_spec.BoundedArraySpec(
-            shape=(12,24), dtype=np.int32, minimum=0, maximum=1, name='observation')
-        self._state = np.zeros(shape=(12,24))
+            shape=(288,), dtype=np.int32, minimum=0, maximum=1, name='observation')
+        self._state = np.zeros(shape=(288))
         self._episode_ended = False
 
     def action_spec(self):
@@ -31,7 +31,7 @@ class pythonTetris(py_environment.PyEnvironment):
 
     def _reset(self):
         self.java_talker.restart()
-        self._state = np.zeros(shape=(12,24))
+        self._state = np.zeros(shape=(288))
         self._episode_ended = False
         return ts.restart(np.array(self._state, dtype=np.int32))
 
