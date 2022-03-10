@@ -16,6 +16,8 @@ import javax.swing.JPanel;
 public class Tetris extends JPanel
 {
 	private static final long serialVersionUID = 1L;
+	private long score = 0;
+	private long deltaScore = 0;
 	
 	public JFrame f = new JFrame("Tetris");
 	
@@ -64,28 +66,25 @@ public class Tetris extends JPanel
 			{ new Point(1, 0), new Point(0, 1), new Point(1, 1), new Point(0, 2) }		//
 		}
 	};
+	private Point pieceOrigin;
 	
 	private final Color [] tetrominoColours = 
 	{
 		Color.cyan, Color.blue, Color.orange, Color.yellow, Color.green, Color.magenta, Color.red
 	};
+	private Color [] [] wall;
 	
-	private Point pieceOrigin;
+	private boolean gameOver = false;
+	private boolean episodeOver = false;
+	private boolean isSpawned = false;
+
+	private ArrayList <Integer> next = new ArrayList <Integer>();
+	public final int gameWidth = 12;
+	public final int gameHeight = 24;
 	private int curPiece;
 	private int rotation;
 	private int county;
-	private ArrayList <Integer> next = new ArrayList <Integer>();
-	private boolean gameOver = false;
-	private boolean episodeOver = false;
-	private long score = 0;
-	private Color [] [] wall;
 	private int [] [] wall2; //clone wall to feed to ai
-	private long deltaScore = 0;
-
-	public final int gameWidth = 12;
-	public final int gameHeight = 24;
-
-	private boolean isSpawned = false;
 	
 	public Tetris() { }
 	
