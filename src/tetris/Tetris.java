@@ -134,7 +134,6 @@ public class Tetris extends JPanel
 		{
 			wall2[pieceOrigin.x + p.x][pieceOrigin.y + p.y] = 0;
 		}
-
 		if (collidesAt(pieceOrigin.x, pieceOrigin.y + 1, rotation)) 
 		{
 			System.out.println("game over");
@@ -159,7 +158,7 @@ public class Tetris extends JPanel
 	public void rotate(int i)
 	{
 		int newRotation = (rotation + i) % 4;
-		if (newRotation < 0) 
+		if (newRotation < 0)
 		{
 			newRotation = 3;
 		}
@@ -183,7 +182,7 @@ public class Tetris extends JPanel
 	{
 		if (!collidesAt(pieceOrigin.x, pieceOrigin.y + 1, rotation)) 
 		{
-			pieceOrigin.y += 1;
+			pieceOrigin.y++;
 		} 
 		else 
 		{
@@ -224,8 +223,8 @@ public class Tetris extends JPanel
 						wall2 [u] [l+1] = wall2 [u] [l];
 					}
 				}
-				k += 1;
-				numClears += 1;
+				k++;
+				numClears++;
 			}
 		}
 		deltaScore = 0;
@@ -258,7 +257,6 @@ public class Tetris extends JPanel
 				g.fillRect(26*i, 26*k, 25, 25);
 			}
 		}
-		
 		g.setColor(Color.WHITE);
 		g.setFont(new Font("Courier", Font.PLAIN, 20));
 		g.drawString("Score: " + score, 30, 20);
@@ -349,11 +347,11 @@ public class Tetris extends JPanel
 		episodeOver = false;
 	}
 	
-	public int getX(){
+	public int get_X(){
 		return pieceOrigin.x;
 	}
 
-	public int getY(){
+	public int get_Y(){
 		return pieceOrigin.y;
 	}
 

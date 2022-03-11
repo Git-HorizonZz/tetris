@@ -26,30 +26,6 @@ public class TetrisActions implements KeyListener {
 	{
 		switch (e.getKeyCode())
 		{
-			case KeyEvent.VK_UP:
-				game.rotate(-1);
-				break;
-			case KeyEvent.VK_DOWN:
-				game.rotate(+1);
-				break;
-			case KeyEvent.VK_LEFT:
-				game.move(-1);
-				break;
-			case KeyEvent.VK_RIGHT:
-				game.move(+1);
-				break;
-			case KeyEvent.VK_W:
-				game.rotate(-1);
-				break;
-			case KeyEvent.VK_S:
-				game.rotate(+1);
-				break;
-			case KeyEvent.VK_A:
-				game.move(-1);
-				break;
-			case KeyEvent.VK_D:
-				game.move(+1);
-				break;
 			case KeyEvent.VK_SPACE:
 				game.drop();
 				break;
