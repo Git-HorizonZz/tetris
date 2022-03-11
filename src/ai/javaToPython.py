@@ -61,9 +61,9 @@ class JavaToPython():
             else:
                 self.actions_obj.rotateCounterClockwise()
             time.sleep(0.1)
-        while self.tetris_UI.getX() != x and not self.get_episode_over():
-            self.terminal.println("REAL: " + str((self.tetris_UI.getX())) + "  GOAL: " + str((x)))
-            if self.tetris_UI.getX() > x:
+        while self.tetris_UI.get_X() != x and not self.get_episode_over():
+            self.terminal.println("REAL: " + str((self.tetris_UI.get_X())) + "  GOAL: " + str((x)))
+            if self.tetris_UI.get_X() > x:
                 if not self.tetris_UI.canMoveLeft():
                     self.terminal.println("correct pos")
                     return
