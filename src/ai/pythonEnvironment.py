@@ -54,11 +54,9 @@ class pythonTetris(py_environment.PyEnvironment):
             self.java_talker.go_to_location(action)
             self._state = self.java_talker.get_python_wall()
             
-            print(self._state)
 
             # Waits to give reward until newest block collides
-            print("waiting")
-            wait(lambda: self.java_talker.just_collided(), sleep_seconds=0.1)
+            wait(lambda: self.java_talker.just_collided(), sleep_seconds=0.05)
             return ts.transition(
                 np.array(self._state, dtype=np.int32),
                 reward=self.java_talker.get_reward(),

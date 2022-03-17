@@ -27,7 +27,7 @@ from tf_agents.replay_buffers import reverb_utils
 
 import time
 
-num_iterations = 10 # @param {type:"integer"}
+num_iterations = 100 # @param {type:"integer"}
 
 initial_collect_steps = 10  # @param {type:"integer"}
 collect_steps_per_iteration =   1# @param {type:"integer"}
@@ -38,7 +38,7 @@ learning_rate = 1e-3  # @param {type:"number"}
 log_interval = 200  # @param {type:"integer"}
 
 num_eval_episodes = 2  # @param {type:"integer"}
-eval_interval = 1000  # @param {type:"integer"}
+eval_interval = 1  # @param {type:"integer"}
 
 '''
 Connects to java script
@@ -212,10 +212,12 @@ for _ in range(num_iterations):
 
 iterations = range(0, num_iterations + 1, eval_interval)
 plt.plot(iterations, returns)
-# plt.ylabel('Average Return')
-# plt.xlabel('Iterations')
+print("it: {}".format(iterations))
+print("plotted")
+plt.ylabel('Average Return')
+plt.xlabel('Iterations')
 # plt.ylim(top=250)
-
+plt.show()
 
 
 

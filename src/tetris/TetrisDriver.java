@@ -12,7 +12,7 @@ import py4j.GatewayServer;
 public class TetrisDriver 
 {
 	private static int count = 0;
-	private static int speed = 1000;
+	private static int speed = 10;
 	
 	private static final Tetris game = new Tetris();
 	private static TetrisActions actions;

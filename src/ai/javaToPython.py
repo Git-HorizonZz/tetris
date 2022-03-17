@@ -34,7 +34,6 @@ class JavaToPython():
             return 0.05
     
     def just_collided(self):
-        print(self.tetris_UI.getColliding())
         if self.tetris_UI.getColliding():
             self.tetris_UI.stopColliding()
             return True
@@ -46,9 +45,6 @@ class JavaToPython():
     def go_to_location(self, position):
         rotation = position // 10
         x_pos = position % 10
-        print(position)
-        print(rotation)
-        print(x_pos)
 
         rotation = rotation % 4
         rot = rotation.item()
@@ -60,7 +56,7 @@ class JavaToPython():
                 self.actions_obj.rotateClockwise()
             else:
                 self.actions_obj.rotateCounterClockwise()
-            time.sleep(0.1)
+            # time.sleep(0.1)
         while self.tetris_UI.get_X() != x and not self.get_episode_over():
             self.terminal.println("REAL: " + str((self.tetris_UI.get_X())) + "  GOAL: " + str((x)))
             if self.tetris_UI.get_X() > x:
@@ -73,6 +69,6 @@ class JavaToPython():
                     # print("correct pos")
                     return
                 self.actions_obj.moveRight()
-            time.sleep(0.1)
+            # time.sleep(0.1)
         self.terminal.println("correct pos")
 
