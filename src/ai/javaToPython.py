@@ -29,9 +29,11 @@ class JavaToPython():
         
     def get_reward(self):
         if self.tetris_UI.getDeltaScore() != 0:
-            return self.tetris_UI.getDeltaScore() / 200
+            return self.tetris_UI.getDeltaScore() / 50
+        elif not self.covered_row():
+            return 0.2
         else:
-            return 0.05
+            return 0
     
     def just_collided(self):
         if self.tetris_UI.getColliding():
@@ -40,6 +42,14 @@ class JavaToPython():
         else:
             self.actions_obj.dropDown()
             return False
+        
+    def covered_row(self):
+        covered = False
+        for b in self.tetris_UI.getCoveredRows():
+            if b:
+                covered = True
+        return covered
+        
 
     def go_to_location(self, position):
         rotation = position // 10

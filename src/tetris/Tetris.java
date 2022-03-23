@@ -7,6 +7,7 @@ import java.awt.Point;
 import java.nio.ByteBuffer;
 import java.nio.ByteOrder;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Collections;
 
 import javax.swing.JFrame;
@@ -85,6 +86,7 @@ public class Tetris extends JPanel
 	private int rotation;
 	private int county;
 	private int [] [] wall2; //clone wall to feed to ai
+	ArrayList<Boolean> coveredRows = new ArrayList<Boolean>();
 	
 	public Tetris() { }
 	
@@ -180,6 +182,7 @@ public class Tetris extends JPanel
 	
 	public void drop()
 	{
+		ArrayList<Integer> affectedRows = new ArrayList<Integer>();
 		if (!collidesAt(pieceOrigin.x, pieceOrigin.y + 1, rotation)) 
 		{
 			pieceOrigin.y++;
@@ -188,9 +191,24 @@ public class Tetris extends JPanel
 		{
 			for (Point p : Tetrominos [curPiece] [rotation])
 			{
-				wall[pieceOrigin.x + p.x][pieceOrigin.y + p.y] = tetrominoColours[curPiece];
-				wall2[pieceOrigin.x + p.x][pieceOrigin.y + p.y] = 1;
+				int row = pieceOrigin.x + p.x;
+				boolean newRow = true;
+
+				wall[row][pieceOrigin.y + p.y] = tetrominoColours[curPiece];
+				wall2[row][pieceOrigin.y + p.y] = 1;
+				
+				for(int i : affectedRows){
+					if (row == i){
+						newRow = false;
+					}
+				}
+				if(newRow)
+					affectedRows.add(row);
+				
+				
 			}
+			for(int i : affectedRows)
+				coveredRows.add(coveredHole(i));
 			clearRows();
 			spawnPiece();
 		}	
@@ -405,5 +423,43 @@ public class Tetris extends JPanel
 			return true;
 		else
 			return false;
+	}
+
+	public boolean coveredHole(int row){
+		boolean covered = false;
+		boolean empty = true;
+		int[] intCol = getCol(row);
+		System.out.println("row " + row + ": " + Arrays.toString(intCol));
+
+		for(int i : intCol){
+			if (i == 1){
+				empty = false;
+			} else if (empty == false){
+				covered = true;
+				System.out.println("covered");
+			}
+		}
+		return covered;
+	}
+
+	public int[] getCol(int colInt) {
+		int[] colArr = new int[getWall()[0].length - 2];
+
+		for(int i = 1; i < colArr.length; i++)
+			colArr[i] = getWall()[colInt][i];
+
+		return colArr;
+	}
+
+	public ArrayList<Boolean> getCoveredRows(){
+
+		ArrayList<Boolean> rows = new ArrayList<Boolean>();
+
+		for(Boolean b : coveredRows){
+			rows.add(b);
+		}
+		coveredRows.clear();
+
+		return rows;
 	}
 }
