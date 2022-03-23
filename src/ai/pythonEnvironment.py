@@ -48,7 +48,7 @@ class pythonTetris(py_environment.PyEnvironment):
             self._episode_ended = True
             return ts.termination(np.array(self._state, dtype=np.int32), -1)
         else:
-            print("step!")
+            # print("step!")
             # Otherwise decide action and see wall
             # print(action)
             self.java_talker.go_to_location(action)
@@ -56,7 +56,10 @@ class pythonTetris(py_environment.PyEnvironment):
             
 
             # Waits to give reward until newest block collides
-            wait(lambda: self.java_talker.just_collided(), sleep_seconds=0.05)
+            # wait(lambda: self.java_talker.just_collided(), sleep_seconds=0.05)
+            while not self.java_talker.just_collided():
+                pass
+            
             return ts.transition(
                 np.array(self._state, dtype=np.int32),
                 reward=self.java_talker.get_reward(),

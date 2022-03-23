@@ -27,9 +27,9 @@ from tf_agents.replay_buffers import reverb_utils
 
 import time
 
-num_iterations = 100 # @param {type:"integer"}
+num_iterations = 1000000 # @param {type:"integer"}
 
-initial_collect_steps = 10  # @param {type:"integer"}
+initial_collect_steps = 100  # @param {type:"integer"}
 collect_steps_per_iteration =   1# @param {type:"integer"}
 replay_buffer_max_length = 100000  # @param {type:"integer"}
 
@@ -37,8 +37,8 @@ batch_size = 64  # @param {type:"integer"}
 learning_rate = 1e-3  # @param {type:"number"}
 log_interval = 200  # @param {type:"integer"}
 
-num_eval_episodes = 2  # @param {type:"integer"}
-eval_interval = 1  # @param {type:"integer"}
+num_eval_episodes = 10  # @param {type:"integer"}
+eval_interval = 10  # @param {type:"integer"}
 
 '''
 Connects to java script
@@ -166,8 +166,8 @@ dataset = replay_buffer.as_dataset(
     num_steps=2).prefetch(3)
 
 iterator = iter(dataset)
-print(iterator)
-print(iterator.next())
+# print(iterator)
+# print(iterator.next())
 
 # (Optional) Optimize by wrapping some of the code in a graph using TF function.
 agent.train = common.function(agent.train)
@@ -190,34 +190,35 @@ collect_driver = py_driver.PyDriver(
     [rb_observer],
     max_steps=collect_steps_per_iteration)
 
-for _ in range(num_iterations):
+try:
+  for _ in range(num_iterations):
 
-  # Collect a few steps and save to the replay buffer.
-  time_step, _ = collect_driver.run(time_step)
+    # Collect a few steps and save to the replay buffer.
+    time_step, _ = collect_driver.run(time_step)
 
-  # Sample a batch of data from the buffer and update the agent's network.
-  experience, unused_info = next(iterator)
-  train_loss = agent.train(experience).loss
+    # Sample a batch of data from the buffer and update the agent's network.
+    experience, unused_info = next(iterator)
+    train_loss = agent.train(experience).loss
 
-  step = agent.train_step_counter.numpy()
+    step = agent.train_step_counter.numpy()
 
-  if step % log_interval == 0:
-    print('step = {0}: loss = {1}'.format(step, train_loss))
+    if step % log_interval == 0:
+      print('step = {0}: loss = {1}'.format(step, train_loss))
 
-  if step % eval_interval == 0:
-    avg_return = compute_avg_return(eval_env, agent.policy, num_eval_episodes)
-    print('step = {0}: Average Return = {1}'.format(step, avg_return))
-    returns.append(avg_return)
-
-
-iterations = range(0, num_iterations + 1, eval_interval)
-plt.plot(iterations, returns)
-print("it: {}".format(iterations))
-print("plotted")
-plt.ylabel('Average Return')
-plt.xlabel('Iterations')
-# plt.ylim(top=250)
-plt.show()
+    if step % eval_interval == 0:
+      avg_return = compute_avg_return(eval_env, agent.policy, num_eval_episodes)
+      print('step = {0}: Average Return = {1}'.format(step, avg_return))
+      returns.append(avg_return)
+finally:
+  # iterations = range(0, num_iterations + 1, eval_interval)
+  iterations = range(0, len(returns))
+  plt.plot(iterations, returns)
+  print("it: {}".format(iterations))
+  print("plotted")
+  plt.ylabel('Average Return')
+  plt.xlabel('Iterations')
+  # plt.ylim(top=250)
+  plt.show()
 
 
 
@@ -230,12 +231,12 @@ plt.show()
 # print('time_step_spec.discount:', tf_env.time_step_spec().discount)
 # print('time_step_spec.reward:', tf_env.time_step_spec().reward)
 
-action = np.array((2,), dtype=np.int32)
+# action = np.array((2,), dtype=np.int32)
 
 
-rewards = []
-steps = []
-number_of_episodes = 2
+# rewards = []
+# steps = []
+# number_of_episodes = 2
 
 
 # for _ in range(number_of_episodes):
