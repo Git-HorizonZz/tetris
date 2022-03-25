@@ -85,6 +85,7 @@ public class Tetris extends JPanel
 	private int curPiece;
 	private int rotation;
 	private int county;
+	private double aveY;
 	private int [] [] wall2; //clone wall to feed to ai
 	ArrayList<Boolean> coveredRows = new ArrayList<Boolean>();
 	
@@ -125,11 +126,14 @@ public class Tetris extends JPanel
 		}
 		curPiece = next.get(0);
 		next.remove(0);
-		
+
+		aveY = 0;
 		for (Point p : Tetrominos [curPiece] [rotation])
 		{
 			wall2[pieceOrigin.x + p.x][pieceOrigin.y + p.y] = 1;
+			aveY += p.y;
 		}
+		aveY /= (double) Tetrominos [curPiece] [rotation].length;
 		// printWall();
 		isSpawned = true;
 		for (Point p : Tetrominos [curPiece] [rotation])
@@ -186,6 +190,7 @@ public class Tetris extends JPanel
 		if (!collidesAt(pieceOrigin.x, pieceOrigin.y + 1, rotation)) 
 		{
 			pieceOrigin.y++;
+			aveY++;
 		} 
 		else 
 		{
@@ -207,12 +212,14 @@ public class Tetris extends JPanel
 				
 				
 			}
+			aveY /= (double) Tetrominos [curPiece] [rotation].length;
 			for(int i : affectedRows)
 				coveredRows.add(coveredHole(i));
 			clearRows();
 			spawnPiece();
 		}	
 		repaint();
+		// System.out.println("aveY: " + aveY);
 	}
 	
 	public void clearRows() 
@@ -436,7 +443,7 @@ public class Tetris extends JPanel
 				empty = false;
 			} else if (empty == false){
 				covered = true;
-				System.out.println("covered");
+				// System.out.println("covered");
 			}
 		}
 		return covered;
@@ -461,5 +468,9 @@ public class Tetris extends JPanel
 		coveredRows.clear();
 
 		return rows;
+	}
+
+	public double getAveY(){
+		return aveY;
 	}
 }
