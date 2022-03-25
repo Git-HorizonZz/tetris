@@ -117,31 +117,41 @@ public class Tetris extends JPanel
 	public void spawnPiece()
 	{
 		pieceOrigin = new Point(5, 2);
-		rotation = 0;
-		if (next.isEmpty()) 
-		{
-			Collections.addAll(next, 0, 1, 2, 3, 4, 5, 6);
-			Collections.shuffle(next);
-		}
-		curPiece = next.get(0);
-		next.remove(0);
-		
-		for (Point p : Tetrominos [curPiece] [rotation])
-		{
-			wall2[pieceOrigin.x + p.x][pieceOrigin.y + p.y] = 1;
-		}
-		// printWall();
-		isSpawned = true;
-		for (Point p : Tetrominos [curPiece] [rotation])
-		{
-			wall2[pieceOrigin.x + p.x][pieceOrigin.y + p.y] = 0;
-		}
-		if (collidesAt(pieceOrigin.x, pieceOrigin.y + 1, rotation)) 
+		if (wall[5][2] != Color.GRAY)
 		{
 			System.out.println("game over");
 			episodeOver = true;
 			county++;
 			repaint();
+		}
+		else
+		{
+			rotation = 0;
+			if (next.isEmpty()) 
+			{
+				Collections.addAll(next, 0, 1, 2, 3, 4, 5, 6);
+				Collections.shuffle(next);
+			}
+			curPiece = next.get(0);
+			next.remove(0);
+			
+			for (Point p : Tetrominos [curPiece] [rotation])
+			{
+				wall2[pieceOrigin.x + p.x][pieceOrigin.y + p.y] = 1;
+			}
+			// printWall();
+			isSpawned = true;
+			for (Point p : Tetrominos [curPiece] [rotation])
+			{
+				wall2[pieceOrigin.x + p.x][pieceOrigin.y + p.y] = 0;
+			}
+			if (collidesAt(pieceOrigin.x, pieceOrigin.y + 1, rotation)) 
+			{
+				System.out.println("game over");
+				episodeOver = true;
+				county++;
+				repaint();
+			}
 		}
 	}
 	
