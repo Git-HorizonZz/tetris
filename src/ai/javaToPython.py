@@ -13,6 +13,8 @@ class JavaToPython():
         self.actions_obj = self.tetris_game.getActionsObject()
         self.tetris_UI = self.tetris_game.getGameUI()
         self.terminal = self.gateway.jvm.System.out
+        
+        self.ave_y = 0
 
     def get_python_wall(self):
         wall = self.tetris_UI.getWall()
@@ -31,7 +33,7 @@ class JavaToPython():
         if self.tetris_UI.getDeltaScore() != 0:
             return self.tetris_UI.getDeltaScore() / 50
         elif not self.covered_row():
-            return 0.2
+            return 0.01 * self.ave_y
         else:
             return 0
     
@@ -41,6 +43,7 @@ class JavaToPython():
             return True
         else:
             self.actions_obj.dropDown()
+            self.ave_y = self.tetris_UI.getAveY()
             return False
         
     def covered_row(self):
