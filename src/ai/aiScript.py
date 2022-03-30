@@ -27,18 +27,42 @@ from tf_agents.replay_buffers import reverb_utils
 
 import time
 
+# Define a helper function to create Dense layers configured with the right
+# activation and kernel initializer.
+def dense_layer(num_units):
+  return tf.keras.layers.Dense(
+      num_units)
+
+#@test {"skip": true}
+def compute_avg_return(environment, policy, num_episodes=10):
+
+  total_return = 0.0
+  for _ in range(num_episodes):
+
+    time_step = environment.reset()
+    episode_return = 0.0
+
+    while not time_step.is_last():
+      action_step = policy.action(time_step)
+      time_step = environment.step(action_step.action)
+      episode_return += time_step.reward
+    total_return += episode_return
+
+  avg_return = total_return / num_episodes
+  return avg_return.numpy()[0]
+
 num_iterations = 1000000 # @param {type:"integer"}
 
 initial_collect_steps = 100  # @param {type:"integer"}
 collect_steps_per_iteration =   1# @param {type:"integer"}
-replay_buffer_max_length = 100000  # @param {type:"integer"}
+replay_buffer_max_length = 20000000  # @param {type:"integer"}
 
 batch_size = 64  # @param {type:"integer"}
 learning_rate = 1e-3  # @param {type:"number"}
 log_interval = 200  # @param {type:"integer"}
 
-num_eval_episodes = 10  # @param {type:"integer"}
-eval_interval = 10  # @param {type:"integer"}
+num_eval_episodes = 50  # @param {type:"integer"}
+eval_interval = 50  # @param {type:"integer"}
 
 '''
 Connects to java script
@@ -55,7 +79,7 @@ terminal.println("hello from python")
 print("python")
 
 '''
-Creates environment
+Creates environments
 '''
 python_env = pythonTetris(javaTalker)
 python_env.reset()
@@ -72,11 +96,6 @@ fc_layer_params = (100, 50)
 action_tensor_spec = tensor_spec.from_spec(python_env.action_spec())
 num_actions = action_tensor_spec.maximum - action_tensor_spec.minimum + 1
 
-# Define a helper function to create Dense layers configured with the right
-# activation and kernel initializer.
-def dense_layer(num_units):
-  return tf.keras.layers.Dense(
-      num_units)
 
 # QNetwork consists of a sequence of Dense layers followed by a dense layer
 # with `num_actions` units to generate one q_value per available action as
@@ -107,24 +126,6 @@ agent.initialize()
 eval_policy = agent.policy
 collect_policy = agent.collect_policy
 random_policy = random_tf_policy.RandomTFPolicy(train_env.time_step_spec(), train_env.action_spec())
-
-#@test {"skip": true}
-def compute_avg_return(environment, policy, num_episodes=10):
-
-  total_return = 0.0
-  for _ in range(num_episodes):
-
-    time_step = environment.reset()
-    episode_return = 0.0
-
-    while not time_step.is_last():
-      action_step = policy.action(time_step)
-      time_step = environment.step(action_step.action)
-      episode_return += time_step.reward
-    total_return += episode_return
-
-  avg_return = total_return / num_episodes
-  return avg_return.numpy()[0]
 
 table_name = 'uniform_table'
 replay_buffer_signature = tensor_spec.from_spec(
@@ -190,6 +191,7 @@ collect_driver = py_driver.PyDriver(
     [rb_observer],
     max_steps=collect_steps_per_iteration)
 
+# try catch allows user to stop training and still see graph
 try:
   for _ in range(num_iterations):
 
