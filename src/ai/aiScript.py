@@ -6,7 +6,12 @@ from pythonEnvironment import pythonTetris
 import tensorflow as tf
 import matplotlib.pyplot as plt
 
+from tensorflow import train
+
 import numpy as np
+
+import os
+import tempfile
 
 import reverb
 
@@ -22,6 +27,7 @@ from tf_agents.networks import sequential
 from tf_agents.utils import common
 from tf_agents.policies import random_tf_policy
 from tf_agents.policies import py_tf_eager_policy
+from tf_agents.policies import py_epsilon_greedy_policy
 from tf_agents.replay_buffers import reverb_replay_buffer
 from tf_agents.replay_buffers import reverb_utils
 
@@ -51,6 +57,9 @@ def compute_avg_return(environment, policy, num_episodes=10):
   avg_return = total_return / num_episodes
   return avg_return.numpy()[0]
 
+
+tempdir = os.getenv("TEST_TMPDIR", tempfile.gettempdir())
+
 num_iterations = 1000000 # @param {type:"integer"}
 
 initial_collect_steps = 100  # @param {type:"integer"}
@@ -61,8 +70,10 @@ batch_size = 64  # @param {type:"integer"}
 learning_rate = 1e-3  # @param {type:"number"}
 log_interval = 200  # @param {type:"integer"}
 
-num_eval_episodes = 50  # @param {type:"integer"}
-eval_interval = 50  # @param {type:"integer"}
+num_eval_episodes = 10  # @param {type:"integer"}
+eval_interval = 10  # @param {type:"integer"}
+
+epsilon = 0.2
 
 '''
 Connects to java script
@@ -108,6 +119,7 @@ q_values_layer = tf.keras.layers.Dense(
         minval=-0.03, maxval=0.03),
     bias_initializer=tf.keras.initializers.Constant(-0.2))
 q_net = sequential.Sequential(dense_layers + [q_values_layer])
+global_step = tf.compat.v1.train.get_or_create_global_step()
 
 optimizer = tf.keras.optimizers.Adam(learning_rate=learning_rate)
 
@@ -132,7 +144,7 @@ replay_buffer_signature = tensor_spec.from_spec(
       agent.collect_data_spec)
 replay_buffer_signature = tensor_spec.add_outer_dim(
     replay_buffer_signature)
-print("script done")
+print("script checkpoint 1")
 table = reverb.Table(
     table_name,
     max_size=replay_buffer_max_length,
@@ -157,14 +169,18 @@ rb_observer = reverb_utils.ReverbAddTrajectoryObserver(
 py_driver.PyDriver(
     python_env,
     py_tf_eager_policy.PyTFEagerPolicy(
-      random_policy, use_tf_function=True),
+      random_policy, use_tf_function=False),
     [rb_observer],
     max_steps=initial_collect_steps).run(train_py_env.reset())
+
+print("script checkpoint 2")
 
 dataset = replay_buffer.as_dataset(
     num_parallel_calls=3,
     sample_batch_size=batch_size,
     num_steps=2).prefetch(3)
+
+print("script checkpoint 3")
 
 iterator = iter(dataset)
 # print(iterator)
@@ -173,17 +189,32 @@ iterator = iter(dataset)
 # (Optional) Optimize by wrapping some of the code in a graph using TF function.
 agent.train = common.function(agent.train)
 
+print("script checkpoint 4")
+
 # Reset the train step.
 agent.train_step_counter.assign(0)
 
+
+print("between 1")
 # Evaluate the agent's policy once before training.
 avg_return = compute_avg_return(eval_env, agent.policy, num_eval_episodes)
+print("between 2")
 returns = [avg_return]
 
+print("between 3")
 # Reset the environment.
 time_step = train_py_env.reset()
 
+print("script checkpoint 5")
+
 # Create a driver to collect experience.
+# collect_driver = py_driver.PyDriver(
+#     python_env,
+#     py_tf_eager_policy.PyTFEagerPolicy(
+#       agent.collect_policy, use_tf_function=True),
+#     [rb_observer],
+#     max_steps=collect_steps_per_iteration)
+
 collect_driver = py_driver.PyDriver(
     python_env,
     py_tf_eager_policy.PyTFEagerPolicy(
@@ -191,8 +222,21 @@ collect_driver = py_driver.PyDriver(
     [rb_observer],
     max_steps=collect_steps_per_iteration)
 
+checkpoint_dir = os.path.join(tempdir, 'checkpoint')
+train_checkpointer = common.Checkpointer(
+  ckpt_dir=checkpoint_dir,
+  max_to_keep=1,
+  agent=agent,
+  policy=agent.policy,
+  replay_buffer=replay_buffer,
+  global_step=global_step
+)
+train_checkpointer.initialize_or_restore()
+global_step = tf.compat.v1.train.get_global_step()
+
+print("script checkpoint 6")
 # try catch allows user to stop training and still see graph
-try:
+try:  
   for _ in range(num_iterations):
 
     # Collect a few steps and save to the replay buffer.
@@ -212,6 +256,9 @@ try:
       print('step = {0}: Average Return = {1}'.format(step, avg_return))
       returns.append(avg_return)
 finally:
+  
+  train_checkpointer.save(global_step)
+      
   # iterations = range(0, num_iterations + 1, eval_interval)
   iterations = range(0, len(returns))
   plt.plot(iterations, returns)

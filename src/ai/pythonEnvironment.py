@@ -20,7 +20,7 @@ class pythonTetris(py_environment.PyEnvironment):
             shape=(), dtype=np.int64, minimum=0, maximum=39, name='play')
         self._observation_spec = array_spec.BoundedArraySpec(
             shape=(288,), dtype=np.int32, minimum=0, maximum=1, name='observation')
-        self._state = np.zeros(shape=(288))
+        self._state = np.zeros(shape=(288,))
         self._episode_ended = False
 
     def action_spec(self):
@@ -31,7 +31,7 @@ class pythonTetris(py_environment.PyEnvironment):
 
     def _reset(self):
         self.java_talker.restart()
-        self._state = np.zeros(shape=(288))
+        self._state = np.zeros(shape=(288,))
         self._episode_ended = False
         return ts.restart(np.array(self._state, dtype=np.int32))
 
@@ -43,10 +43,10 @@ class pythonTetris(py_environment.PyEnvironment):
             return self.reset()
 
         if self.java_talker.get_episode_over():
-            # If episode is over, let environment know and give punishment of -1
+            # If episode is over, let environment know and give punishment of -2
             self.java_talker.restart()
             self._episode_ended = True
-            return ts.termination(np.array(self._state, dtype=np.int32), -1)
+            return ts.termination(np.array(self._state, dtype=np.int32), -2)
         else:
             # print("step!")
             # Otherwise decide action and see wall

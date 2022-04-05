@@ -77,7 +77,7 @@ public class Tetris extends JPanel
 	
 	private boolean gameOver = false;
 	private boolean episodeOver = false;
-	private boolean isSpawned = false;
+	private boolean spawning = false;
 
 	private ArrayList <Integer> next = new ArrayList <Integer>();
 	public final int gameWidth = 12;
@@ -85,9 +85,11 @@ public class Tetris extends JPanel
 	private int curPiece;
 	private int rotation;
 	private int county;
-	private double aveY;
 	private int [] [] wall2; //clone wall to feed to ai
 	ArrayList<Boolean> coveredRows = new ArrayList<Boolean>();
+
+	private double aveY;
+	private double oldAveY;
 	
 	public Tetris() { }
 	
@@ -117,6 +119,7 @@ public class Tetris extends JPanel
 	
 	public void spawnPiece()
 	{
+		spawning = false;
 		pieceOrigin = new Point(5, 2);
 		if (wall[5][2] != Color.GRAY)
 		{
@@ -130,7 +133,7 @@ public class Tetris extends JPanel
 			rotation = 0;
 			if (next.isEmpty()) 
 			{
-				Collections.addAll(next, 0, 1, 2, 3, 4, 5, 6);
+				Collections.addAll(next, 3);
 				Collections.shuffle(next);
 			}
 			curPiece = next.get(0);
@@ -141,7 +144,6 @@ public class Tetris extends JPanel
 				wall2[pieceOrigin.x + p.x][pieceOrigin.y + p.y] = 1;
 			}
 			// printWall();
-			isSpawned = true;
 			for (Point p : Tetrominos [curPiece] [rotation])
 			{
 				wall2[pieceOrigin.x + p.x][pieceOrigin.y + p.y] = 0;
@@ -197,7 +199,6 @@ public class Tetris extends JPanel
 		if (!collidesAt(pieceOrigin.x, pieceOrigin.y + 1, rotation)) 
 		{
 			pieceOrigin.y++;
-			aveY++;
 		} 
 		else 
 		{
@@ -219,11 +220,10 @@ public class Tetris extends JPanel
 				
 				
 			}
-			aveY /= (double) Tetrominos [curPiece] [rotation].length;
 			for(int i : affectedRows)
 				coveredRows.add(coveredHole(i));
 			clearRows();
-			spawnPiece();
+			spawning = true;
 		}	
 		repaint();
 		// System.out.println("aveY: " + aveY);
@@ -349,7 +349,7 @@ public class Tetris extends JPanel
 		// Convert the ByteBuffer to a byte array and return it
 		byte[] byteArray = intBuffer.array();
 
-		System.out.println("converted to bytes");
+		// System.out.println("converted to bytes");
 		return byteArray;
 	}
 
@@ -406,11 +406,11 @@ public class Tetris extends JPanel
 	}
 
 	public boolean getColliding(){
-		return isSpawned;
+		return spawning;
 	}
 
 	public void stopColliding(){
-		isSpawned = false;
+		spawning = false;
 	}
 
 	public boolean getEpisodeOver(){
@@ -443,7 +443,7 @@ public class Tetris extends JPanel
 		boolean covered = false;
 		boolean empty = true;
 		int[] intCol = getCol(row);
-		System.out.println("row " + row + ": " + Arrays.toString(intCol));
+		// System.out.println("row " + row + ": " + Arrays.toString(intCol));
 
 		for(int i : intCol){
 			if (i == 1){
@@ -478,6 +478,18 @@ public class Tetris extends JPanel
 	}
 
 	public double getAveY(){
+		oldAveY = aveY;
+		aveY = 0;
+		for (Point p : Tetrominos [curPiece] [rotation])
+		{
+			aveY += pieceOrigin.y + p.y;
+		}
+		aveY /= (double) Tetrominos [curPiece] [rotation].length;
+		// System.out.println("java: " + aveY);
 		return aveY;
+	}
+
+	public int getCurrentPiece() {
+		return curPiece;
 	}
 }

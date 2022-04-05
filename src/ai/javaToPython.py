@@ -1,7 +1,11 @@
+import math
+from random import random
 from py4j.java_gateway import JavaGateway
 
 import numpy
 from numpy import array
+
+from random import randint
 
 import time
 
@@ -15,7 +19,9 @@ class JavaToPython():
         self.terminal = self.gateway.jvm.System.out
         
         self.ave_y = 0
-
+        self.speed = 0.001
+        self.x_pos = 0
+        
     def get_python_wall(self):
         wall = self.tetris_UI.getWall()
         byteArray = self.tetris_UI.getByteArray(wall)
@@ -30,20 +36,32 @@ class JavaToPython():
         self.tetris_UI.newEpisode()
         
     def get_reward(self):
+        # print("reward: " + str(self.ave_y))
+        reward = (0.08 * self.ave_y ** (1/1.8)) - 0.
+        # print("SCORE: " + str(reward))
         if self.tetris_UI.getDeltaScore() != 0:
+            # print("SCORED!!: " + str(self.tetris_UI.getDeltaScore() / 50))
             return self.tetris_UI.getDeltaScore() / 50
         elif not self.covered_row():
-            return 0.01 * self.ave_y
+            # print("No cover: " + str(reward))
+            return reward
         else:
-            return 0
+            # print("cover: " + str(reward / 5))
+            return reward / 5
+        
+            
     
     def just_collided(self):
         if self.tetris_UI.getColliding():
-            self.tetris_UI.stopColliding()
+            
+            self.ave_y = self.tetris_UI.getAveY()
+            # print(self.ave_y)
+            self.tetris_UI.spawnPiece()
             return True
         else:
             self.actions_obj.dropDown()
-            self.ave_y = self.tetris_UI.getAveY()
+            time.sleep(self.speed)
+            # self.terminal.println("python: " + str(self.ave_y))
             return False
         
     def covered_row(self):
@@ -57,6 +75,7 @@ class JavaToPython():
     def go_to_location(self, position):
         rotation = position // 10
         x_pos = position % 10
+        self.x_pos = x_pos
 
         rotation = rotation % 4
         rot = rotation.item()
@@ -68,7 +87,7 @@ class JavaToPython():
                 self.actions_obj.rotateClockwise()
             else:
                 self.actions_obj.rotateCounterClockwise()
-            # time.sleep(0.1)
+            time.sleep(self.speed)
         while self.tetris_UI.get_X() != x and not self.get_episode_over():
             # self.terminal.println("REAL: " + str((self.tetris_UI.get_X())) + "  GOAL: " + str((x)))
             if self.tetris_UI.get_X() > x:
@@ -81,6 +100,6 @@ class JavaToPython():
                     # print("correct pos")
                     return
                 self.actions_obj.moveRight()
-            # time.sleep(0.1)
-        self.terminal.println("correct pos")
+            time.sleep(self.speed)
+        # self.terminal.println("correct pos")
 
