@@ -63,4 +63,4 @@ class pythonTetris(py_environment.PyEnvironment):
             return ts.transition(
                 np.array(self._state, dtype=np.int32),
                 reward=self.java_talker.get_reward(),
-                discount=1.0)
+                discount=0.9)

@@ -6,6 +6,8 @@ from pythonEnvironment import pythonTetris
 import tensorflow as tf
 import matplotlib.pyplot as plt
 
+from tempfile import TemporaryFile
+
 from tensorflow import train
 
 import numpy as np
@@ -17,6 +19,7 @@ import reverb
 
 from tf_agents.agents.dqn import dqn_agent
 
+from tf_agents.agents.ddpg import critic_network
 from tf_agents.environments import tf_py_environment
 from tf_agents.environments import utils
 from tf_agents.drivers import py_driver
@@ -24,12 +27,20 @@ from tf_agents.specs import tensor_spec
 from tf_agents.specs import tensor_spec
 from tf_agents.specs import BoundedArraySpec
 from tf_agents.networks import sequential
+from tf_agents.networks import actor_distribution_network
 from tf_agents.utils import common
 from tf_agents.policies import random_tf_policy
 from tf_agents.policies import py_tf_eager_policy
 from tf_agents.policies import py_epsilon_greedy_policy
 from tf_agents.replay_buffers import reverb_replay_buffer
 from tf_agents.replay_buffers import reverb_utils
+from tf_agents.train.utils import spec_utils
+from tf_agents.train.utils import strategy_utils
+from tf_agents.train.utils import train_utils
+from tf_agents.agents.sac import tanh_normal_projection_network
+from tf_agents.agents.sac import sac_agent
+from tf_agents.agents.categorical_dqn import categorical_dqn_agent
+from tf_agents.networks import categorical_q_network
 
 import time
 
@@ -199,7 +210,15 @@ print("between 1")
 # Evaluate the agent's policy once before training.
 avg_return = compute_avg_return(eval_env, agent.policy, num_eval_episodes)
 print("between 2")
-returns = [avg_return]
+
+return_file = '/tmp/checkpoint/returns.npy'
+if os.path.exists(return_file):
+  for i in range(10):
+    print("LOADING")
+  returns =  np.load(return_file).tolist()
+  returns.append(avg_return)
+else:
+  returns = [avg_return]
 
 print("between 3")
 # Reset the environment.
@@ -223,6 +242,7 @@ collect_driver = py_driver.PyDriver(
     max_steps=collect_steps_per_iteration)
 
 checkpoint_dir = os.path.join(tempdir, 'checkpoint')
+global_step = tf.compat.v1.train.get_or_create_global_step()
 train_checkpointer = common.Checkpointer(
   ckpt_dir=checkpoint_dir,
   max_to_keep=1,
@@ -258,7 +278,8 @@ try:
 finally:
   
   train_checkpointer.save(global_step)
-      
+  np.save(return_file, returns)
+  
   # iterations = range(0, num_iterations + 1, eval_interval)
   iterations = range(0, len(returns))
   plt.plot(iterations, returns)

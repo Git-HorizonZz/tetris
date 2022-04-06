@@ -133,7 +133,7 @@ public class Tetris extends JPanel
 			rotation = 0;
 			if (next.isEmpty()) 
 			{
-				Collections.addAll(next, 3);
+				Collections.addAll(next, 3, 4);
 				Collections.shuffle(next);
 			}
 			curPiece = next.get(0);

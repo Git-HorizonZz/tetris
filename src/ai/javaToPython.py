@@ -19,8 +19,9 @@ class JavaToPython():
         self.terminal = self.gateway.jvm.System.out
         
         self.ave_y = 0
-        self.speed = 0.001
+        self.speed = 0.000
         self.x_pos = 0
+        self.move = 0
         
     def get_python_wall(self):
         wall = self.tetris_UI.getWall()
@@ -36,18 +37,27 @@ class JavaToPython():
         self.tetris_UI.newEpisode()
         
     def get_reward(self):
-        # print("reward: " + str(self.ave_y))
-        reward = (0.08 * self.ave_y ** (1/1.8)) - 0.
-        # print("SCORE: " + str(reward))
-        if self.tetris_UI.getDeltaScore() != 0:
-            # print("SCORED!!: " + str(self.tetris_UI.getDeltaScore() / 50))
-            return self.tetris_UI.getDeltaScore() / 50
-        elif not self.covered_row():
-            # print("No cover: " + str(reward))
-            return reward
+        # # print("reward: " + str(self.ave_y))
+        # reward = (0.08 * self.ave_y ** (1/1.8)) - 0.
+        # # print("SCORE: " + str(reward))
+        # if self.tetris_UI.getDeltaScore() != 0:
+        #     # print("SCORED!!: " + str(self.tetris_UI.getDeltaScore() / 50))
+        #     return self.tetris_UI.getDeltaScore() / 50
+        # elif not self.covered_row():
+        #     # print("No cover: " + str(reward))
+        #     return reward
+        # else:
+        #     # print("cover: " + str(reward / 5))
+        #     return reward / 5
+        
+        if self.move % 2 == 0 and self.tetris_UI.getCurrentPiece() == 3:
+            # print("good" + str(self.move))
+            return 1
+        elif self.move % 2 == 1 and self.tetris_UI.getCurrentPiece() == 4:
+            return 1
         else:
-            # print("cover: " + str(reward / 5))
-            return reward / 5
+            # print("bad" + str(self.move))
+            return -0.5
         
             
     
@@ -76,6 +86,7 @@ class JavaToPython():
         rotation = position // 10
         x_pos = position % 10
         self.x_pos = x_pos
+        self.move = position
 
         rotation = rotation % 4
         rot = rotation.item()
