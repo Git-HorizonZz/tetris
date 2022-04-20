@@ -133,7 +133,7 @@ public class Tetris extends JPanel
 			rotation = 0;
 			if (next.isEmpty()) 
 			{
-				Collections.addAll(next, 3, 4);
+				Collections.addAll(next, 3);
 				Collections.shuffle(next);
 			}
 			curPiece = next.get(0);
@@ -170,8 +170,9 @@ public class Tetris extends JPanel
 		return false;
 	}
 	
-	public void rotate(int i)
+	public boolean rotate(int i)
 	{
+		boolean canTurn = false;
 		int newRotation = (rotation + i) % 4;
 		if (newRotation < 0)
 		{
@@ -179,9 +180,11 @@ public class Tetris extends JPanel
 		}
 		if (!collidesAt(pieceOrigin.x, pieceOrigin.y, newRotation)) 
 		{
+			canTurn = true;
 			rotation = newRotation;
 		}
 		repaint();
+		return canTurn;
 	}
 	
 	public void move(int i)
@@ -425,18 +428,12 @@ public class Tetris extends JPanel
 
 	public boolean canMoveRight()
 	{
-		if (!collidesAt(pieceOrigin.x + 1, pieceOrigin.y, rotation)) 
-			return true;
-		else
-			return false;
+		return !collidesAt(pieceOrigin.x + 1, pieceOrigin.y, rotation);
 	}
 
 	public boolean canMoveLeft()
 	{
-		if (!collidesAt(pieceOrigin.x - 1, pieceOrigin.y, rotation)) 
-			return true;
-		else
-			return false;
+		return !collidesAt(pieceOrigin.x - 1, pieceOrigin.y, rotation);
 	}
 
 	public boolean coveredHole(int row){

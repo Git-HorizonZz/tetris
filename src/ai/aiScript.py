@@ -73,7 +73,7 @@ tempdir = os.getenv("TEST_TMPDIR", tempfile.gettempdir())
 
 num_iterations = 1000000 # @param {type:"integer"}
 
-initial_collect_steps = 100  # @param {type:"integer"}
+initial_collect_steps = 10000  # @param {type:"integer"}
 collect_steps_per_iteration =   1# @param {type:"integer"}
 replay_buffer_max_length = 20000000  # @param {type:"integer"}
 
@@ -85,6 +85,30 @@ num_eval_episodes = 10  # @param {type:"integer"}
 eval_interval = 10  # @param {type:"integer"}
 
 epsilon = 0.2
+
+# initial_collect_steps = 10000 # @param {type:"integer"}
+# collect_steps_per_iteration = 1 # @param {type:"integer"}
+# replay_buffer_max_length = 10000 # @param {type:"integer"}
+
+# batch_size = 256 # @param {type:"integer"}
+
+# critic_learning_rate = 3e-4 # @param {type:"number"}
+# actor_learning_rate = 3e-4 # @param {type:"number"}
+# alpha_learning_rate = 3e-4 # @param {type:"number"}
+# target_update_tau = 0.005 # @param {type:"number"}
+# target_update_period = 1 # @param {type:"number"}
+# gamma = 0.99 # @param {type:"number"}
+# reward_scale_factor = 1.0 # @param {type:"number"}
+
+# actor_fc_layer_params = (256, 256)
+# critic_joint_fc_layer_params = (256, 256)
+
+# log_interval = 5000 # @param {type:"integer"}
+
+# num_eval_episodes = 20 # @param {type:"integer"}
+# eval_interval = 10000 # @param {type:"integer"}
+
+# policy_save_interval = 5000 # @param {type:"integer"}
 
 '''
 Connects to java script
@@ -143,6 +167,47 @@ agent = dqn_agent.DqnAgent(
     optimizer=optimizer,
     td_errors_loss_fn=common.element_wise_squared_loss,
     train_step_counter=train_step_counter)
+
+# strategy = strategy_utils.get_strategy(tpu=False, use_gpu=True)
+
+# observation_spec, action_spec, time_step_spec = (
+#       spec_utils.get_tensor_specs(train_env))
+
+# with strategy.scope():
+#   critic_net = critic_network.CriticNetwork(
+#         (observation_spec, action_spec),
+#         observation_fc_layer_params=None,
+#         action_fc_layer_params=None,
+#         joint_fc_layer_params=critic_joint_fc_layer_params,
+#         kernel_initializer='glorot_uniform',
+#         last_kernel_initializer='glorot_uniform')
+  
+#   actor_net = actor_distribution_network.ActorDistributionNetwork(
+#       observation_spec,
+#       action_spec,
+#       fc_layer_params=actor_fc_layer_params,
+#       continuous_projection_net=(
+#           tanh_normal_projection_network.TanhNormalProjectionNetwork))
+  
+#   train_step = train_utils.create_train_step()
+
+#   agent = sac_agent.SacAgent(
+#         time_step_spec,
+#         action_spec,
+#         actor_network=actor_net,
+#         critic_network=critic_net,
+#         actor_optimizer=tf.keras.optimizers.Adam(
+#             learning_rate=actor_learning_rate),
+#         critic_optimizer=tf.keras.optimizers.Adam(
+#             learning_rate=critic_learning_rate),
+#         alpha_optimizer=tf.keras.optimizers.Adam(
+#             learning_rate=alpha_learning_rate),
+#         target_update_tau=target_update_tau,
+#         target_update_period=target_update_period,
+#         td_errors_loss_fn=tf.math.squared_difference,
+#         gamma=gamma,
+#         reward_scale_factor=reward_scale_factor,
+#         train_step_counter=train_step)
 
 agent.initialize()
 
@@ -211,7 +276,7 @@ print("between 1")
 avg_return = compute_avg_return(eval_env, agent.policy, num_eval_episodes)
 print("between 2")
 
-return_file = '/tmp/checkpoint/returns.npy'
+return_file = '/home/block5/Documents/GitHub/tetris/src/ai/checkpoint/returns.npy'
 if os.path.exists(return_file):
   for i in range(10):
     print("LOADING")
@@ -241,7 +306,7 @@ collect_driver = py_driver.PyDriver(
     [rb_observer],
     max_steps=collect_steps_per_iteration)
 
-checkpoint_dir = os.path.join(tempdir, 'checkpoint')
+checkpoint_dir = '/home/block5/Documents/GitHub/tetris/src/ai/checkpoint'
 global_step = tf.compat.v1.train.get_or_create_global_step()
 train_checkpointer = common.Checkpointer(
   ckpt_dir=checkpoint_dir,
@@ -273,6 +338,7 @@ try:
 
     if step % eval_interval == 0:
       avg_return = compute_avg_return(eval_env, agent.policy, num_eval_episodes)
+      print()
       print('step = {0}: Average Return = {1}'.format(step, avg_return))
       returns.append(avg_return)
 finally:
