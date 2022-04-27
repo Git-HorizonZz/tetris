@@ -1,3 +1,4 @@
 bin
 .DS_Store
 src/ai/__pycache__
+checkpoints

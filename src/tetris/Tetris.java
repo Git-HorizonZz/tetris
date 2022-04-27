@@ -90,6 +90,8 @@ public class Tetris extends JPanel
 
 	private double aveY;
 	private double oldAveY;
+	private double aveX;
+	private double oldAveX;
 	
 	public Tetris() { }
 	
@@ -484,6 +486,19 @@ public class Tetris extends JPanel
 		aveY /= (double) Tetrominos [curPiece] [rotation].length;
 		// System.out.println("java: " + aveY);
 		return aveY;
+	}
+
+	public double getAveXFromSide(){
+		oldAveX = aveX;
+		aveX = 0;
+		for (Point p : Tetrominos [curPiece] [rotation])
+		{
+			aveX += 5 - Math.abs(4.5 - pieceOrigin.x + p.x);
+		}
+		aveX /= (double) Tetrominos [curPiece] [rotation].length;
+		aveX = Math.abs(aveX);
+		System.out.println("java: " + aveX);
+		return aveX;
 	}
 
 	public int getCurrentPiece() {

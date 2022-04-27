@@ -22,6 +22,8 @@ class pythonTetris(py_environment.PyEnvironment):
             shape=(288,), dtype=np.int32, minimum=0, maximum=1, name='observation')
         self._state = np.zeros(shape=(288,))
         self._episode_ended = False
+        self.old_action = -1
+        self.action_counter = 0
 
     def action_spec(self):
         return self._action_spec
@@ -47,18 +49,27 @@ class pythonTetris(py_environment.PyEnvironment):
             # If episode is over, let environment know and give punishment of -2
             self.java_talker.restart()
             self._episode_ended = True
+            print("end", end="", flush=True)
             return ts.termination(np.array(self._state, dtype=np.int32), is_over)
         else:
             # print("step!")
             # Otherwise decide action and see wall
-            # print(action)
+            if action != self.old_action:
+                print(str(self.action_counter) + " " + str(action), end="", flush=True)
+                self.action_counter = 0
+            else:
+                self.action_counter += 1
+            self.old_action = action
             self.java_talker.enactAction(action)
             self._state = self.java_talker.get_python_wall()
             
 
             # Waits to give reward until newest block collides
             # wait(lambda: self.java_talker.just_collided(), sleep_seconds=0.05)
+            reward = self.java_talker.get_reward()
+            # if reward is not 0:
+            #     print(reward)
             return ts.transition(
                 np.array(self._state, dtype=np.int32),
-                reward=self.java_talker.get_reward(),
-                discount=0.9)
+                reward=reward,
+                discount=0.95)

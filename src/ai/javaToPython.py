@@ -19,12 +19,14 @@ class JavaToPython():
         self.terminal = self.gateway.jvm.System.out
         
         self.ave_y = 0
-        self.speed = 0.000
+        self.ave_x = 0
+        self.speed = 0.
         self.x_pos = 0
         self.move = 0
         self.not_collided_reward = 0
         self.just_rotated = False
         
+        self.max_pieces = 6
         self.total_pieces = 0
         
     def get_python_wall(self):
@@ -37,7 +39,8 @@ class JavaToPython():
     def get_episode_over(self):
         if self.tetris_UI.getEpisodeOver():
             return -2
-        elif self.total_pieces > 100:
+        elif self.total_pieces > self.max_pieces:
+            # print("I win :)")
             return 1
         else:
             return 0
@@ -52,10 +55,14 @@ class JavaToPython():
             self.total_pieces += 1
             # print("collided")
             # print("reward: " + str(self.ave_y))
-            reward = (0.08 * self.ave_y ** (1/1.8)) - 0.
+            rewardY = self.ave_y#(0.1 * self.ave_y ** (1/1.8)) + 0.1
+            rewardX = self.ave_x #(0.12 * self.ave_x)
+            reward = - (0.001 * (rewardX - (5 * rewardY)))
+            # print("reward: " + str(reward))
             # print("SCORE: " + str(reward))
             if self.tetris_UI.getDeltaScore() != 0:
                 # print("SCORED!!: " + str(self.tetris_UI.getDeltaScore() / 50))
+                print("I SCORED!!!!!")
                 return self.tetris_UI.getDeltaScore() / 25
             elif not self.covered_row():
                 # print("No cover: " + str(reward))
@@ -67,18 +74,16 @@ class JavaToPython():
                 else:
                     return reward / 5
         else:
-            if self.not_collided_reward < 0:
-                print(random.randint(1, 9), end="", flush=True)
+            # if self.not_collided_reward < 0:
+            #     print(random.randint(1, 9), end="", flush=True)
             return self.not_collided_reward
         
-        # if self.move % 2 == 0 and self.tetris_UI.getCurrentPiece() == 3:
-        #     # print("good" + str(self.move))
-        #     return 1
-        # elif self.move % 2 == 1 and self.tetris_UI.getCurrentPiece() == 4:
-        #     return 1
-        # else:
-        #     # print("bad" + str(self.move))
-        #     return -0.5
+        self.just_collided()
+        if self.move == 4:
+            # print("good" + str(self.move))
+            return 1
+        else:
+            return -0.5
         
             
     
@@ -86,6 +91,7 @@ class JavaToPython():
         if self.tetris_UI.getColliding():
             
             self.ave_y = self.tetris_UI.getAveY()
+            self.ave_x = self.tetris_UI.getAveXFromSide()
             # print(self.ave_y)
             self.tetris_UI.spawnPiece()
             return True
@@ -103,26 +109,30 @@ class JavaToPython():
         return covered
         
     def enactAction(self, move):
-        
         action = move.item()
+        self.move = move.item()
         self.not_collided_reward = 0
         if action == 0:
             if self.just_rotated or not self.actions_obj.rotateClockwise():
-                self.not_collided_reward = -0.008
+                self.not_collided_reward = -0.000#6
             self.just_rotated = True
         elif action == 1:
             if self.just_rotated or not self.actions_obj.rotateCounterClockwise():
-                self.not_collided_reward = -0.008
+                self.not_collided_reward = -0.000#6
             self.just_rotated = True
         elif action == 2:
             if self.tetris_UI.canMoveLeft():
-                self.not_collided_reward = -0.015
+                self.not_collided_reward = -0.002
+            else:
+                self.not_collided_reward = 0.0007
                 # print("bad")
             self.actions_obj.moveLeft()
             self.just_rotated = False
         elif action == 3:
             if self.tetris_UI.canMoveRight():
-                self.not_collided_reward = -0.015
+                self.not_collided_reward = -0.002
+            else:
+                self.not_collided_reward = 0.0007
                 # print("bad")
             self.actions_obj.moveRight()
             self.just_rotated = False

@@ -163,6 +163,7 @@ train_step_counter = tf.Variable(0)
 agent = dqn_agent.DqnAgent(
     train_env.time_step_spec(),
     train_env.action_spec(),
+    epsilon_greedy=epsilon,
     q_network=q_net,
     optimizer=optimizer,
     td_errors_loss_fn=common.element_wise_squared_loss,
@@ -242,6 +243,20 @@ rb_observer = reverb_utils.ReverbAddTrajectoryObserver(
   table_name,
   sequence_length=2)
 
+
+
+checkpoint_dir = '/home/block5/Documents/GitHub/tetris/src/ai/checkpoint'
+global_step = tf.compat.v1.train.get_or_create_global_step()
+train_checkpointer = common.Checkpointer(
+  ckpt_dir=checkpoint_dir,
+  max_to_keep=1,
+  agent=agent,
+  policy=agent.policy,
+  replay_buffer=replay_buffer,
+  global_step=global_step
+)
+train_checkpointer.initialize_or_restore()
+
 py_driver.PyDriver(
     python_env,
     py_tf_eager_policy.PyTFEagerPolicy(
@@ -270,19 +285,16 @@ print("script checkpoint 4")
 # Reset the train step.
 agent.train_step_counter.assign(0)
 
-
 print("between 1")
-# Evaluate the agent's policy once before training.
-avg_return = compute_avg_return(eval_env, agent.policy, num_eval_episodes)
-print("between 2")
 
 return_file = '/home/block5/Documents/GitHub/tetris/src/ai/checkpoint/returns.npy'
 if os.path.exists(return_file):
   for i in range(10):
     print("LOADING")
   returns =  np.load(return_file).tolist()
-  returns.append(avg_return)
 else:
+  # Evaluate the agent's policy once before training.
+  avg_return = compute_avg_return(eval_env, agent.policy, num_eval_episodes)
   returns = [avg_return]
 
 print("between 3")
@@ -306,17 +318,7 @@ collect_driver = py_driver.PyDriver(
     [rb_observer],
     max_steps=collect_steps_per_iteration)
 
-checkpoint_dir = '/home/block5/Documents/GitHub/tetris/src/ai/checkpoint'
-global_step = tf.compat.v1.train.get_or_create_global_step()
-train_checkpointer = common.Checkpointer(
-  ckpt_dir=checkpoint_dir,
-  max_to_keep=1,
-  agent=agent,
-  policy=agent.policy,
-  replay_buffer=replay_buffer,
-  global_step=global_step
-)
-train_checkpointer.initialize_or_restore()
+
 global_step = tf.compat.v1.train.get_global_step()
 
 print("script checkpoint 6")
@@ -338,6 +340,8 @@ try:
 
     if step % eval_interval == 0:
       avg_return = compute_avg_return(eval_env, agent.policy, num_eval_episodes)
+      if avg_return > 13:
+        agent._epsilon_greedy -= 0.05
       print()
       print('step = {0}: Average Return = {1}'.format(step, avg_return))
       returns.append(avg_return)
