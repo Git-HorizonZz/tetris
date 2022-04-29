@@ -7,7 +7,6 @@ import java.awt.Point;
 import java.nio.ByteBuffer;
 import java.nio.ByteOrder;
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.Collections;
 
 import javax.swing.JFrame;
@@ -89,9 +88,7 @@ public class Tetris extends JPanel
 	ArrayList<Boolean> coveredRows = new ArrayList<Boolean>();
 
 	private double aveY;
-	private double oldAveY;
 	private double aveX;
-	private double oldAveX;
 	
 	public Tetris() { }
 	
@@ -99,10 +96,11 @@ public class Tetris extends JPanel
 	{
 		wall = new Color [gameWidth] [gameHeight];
 		wall2 = new int [gameWidth] [gameHeight];
-		for (int i=0; i<12; i++) 
+		for (int i=0; i<gameWidth; i++) 
 		{
-			for (int k=0; k<23; k++) 
+			for (int k=0; k<gameHeight - 1; k++) 
 			{
+				// sets border to black
 				if (i==0 || i==11 || k==0 || k==22) 
 				{
 					wall [i] [k] = Color.BLACK;
@@ -110,6 +108,7 @@ public class Tetris extends JPanel
 				}
 				else 
 				{
+					// sets everything else to gray
 					wall [i] [k] = Color.GRAY;
 					wall2 [i] [k] = 0;
 				}
@@ -286,9 +285,9 @@ public class Tetris extends JPanel
 	public void paintComponent(Graphics g)
 	{
 		g.fillRect(0,  0,  312, 598);
-		for (int i=0; i<12; i++) 
+		for (int i=0; i<gameWidth; i++) 
 		{
-			for (int k=0; k<23; k++) 
+			for (int k=0; k<gameHeight - 1; k++) 
 			{
 				g.setColor(wall [i] [k]);
 				g.fillRect(26*i, 26*k, 25, 25);
@@ -299,6 +298,7 @@ public class Tetris extends JPanel
 		g.drawString("Score: " + score, 30, 20);
 		if (gameOver && county==1)
 		{
+			// will never run because gameOver is always false
 			g.setColor(Color.BLACK);
 			g.setFont(new Font("Courier", Font.BOLD, 40));
 			g.drawString("GAME OVER", 47, 245);
@@ -332,8 +332,8 @@ public class Tetris extends JPanel
 	 */
 	public int[][] getWall()
 	{
-		int [][] wall3 = wall2;
-		return wall3;
+		int [][] tempWall = wall2;
+		return tempWall;
 	}
 
 	public byte[] getByteArray(int[][] intArray) {
@@ -360,12 +360,12 @@ public class Tetris extends JPanel
 
 	public void printWall()
 	{
-		int [][] bW2 = getWall();
+		int [][] intWall = getWall();
 		for(int row=0; row < wall.length; row++)
 		{
 			for(int col=wall[0].length-2; col >= 0; col--)
 			{
-				if (bW2[row][col] == 1)
+				if (intWall[row][col] == 1)
 				{
 					System.out.print(" X"); // "X" is printed where a sqaure is covered
 				}
@@ -477,7 +477,6 @@ public class Tetris extends JPanel
 	}
 
 	public double getAveY(){
-		oldAveY = aveY;
 		aveY = 0;
 		for (Point p : Tetrominos [curPiece] [rotation])
 		{
@@ -489,7 +488,6 @@ public class Tetris extends JPanel
 	}
 
 	public double getAveXFromSide(){
-		oldAveX = aveX;
 		aveX = 0;
 		for (Point p : Tetrominos [curPiece] [rotation])
 		{

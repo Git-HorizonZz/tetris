@@ -6,7 +6,6 @@ import java.util.Stack;
 
 import javax.swing.JFrame;
 
-import py4j.Gateway;
 import py4j.GatewayServer;
 
 public class TetrisDriver 
@@ -40,7 +39,7 @@ public class TetrisDriver
 		
 		f.addKeyListener(new TetrisActions(game));
 		
-		//runs ai python script
+		//runs ai python script (when run from here cannot print to python terminal)
 		// Runtime.getRuntime().exec("python src/ai/aiScript.py");
 
 		new Thread() 
