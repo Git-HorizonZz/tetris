@@ -86,6 +86,10 @@ eval_interval = 10  # @param {type:"integer"}
 
 epsilon = 0.2
 
+
+'''
+Values for SAC agent (currently not using)
+'''
 # initial_collect_steps = 10000 # @param {type:"integer"}
 # collect_steps_per_iteration = 1 # @param {type:"integer"}
 # replay_buffer_max_length = 10000 # @param {type:"integer"}
@@ -169,6 +173,9 @@ agent = dqn_agent.DqnAgent(
     td_errors_loss_fn=common.element_wise_squared_loss,
     train_step_counter=train_step_counter)
 
+'''
+SAC Agent (currently not using)
+'''
 # strategy = strategy_utils.get_strategy(tpu=False, use_gpu=True)
 
 # observation_spec, action_spec, time_step_spec = (
@@ -359,42 +366,6 @@ finally:
   plt.xlabel('Iterations')
   # plt.ylim(top=250)
   plt.show()
-
-
-
-# utils.validate_py_environment(python_env)
-
-
-# print('action_spec:', tf_env.action_spec())
-# print('time_step_spec.observation:', tf_env.time_step_spec().observation)
-# print('time_step_spec.step_type:', tf_env.time_step_spec().step_type)
-# print('time_step_spec.discount:', tf_env.time_step_spec().discount)
-# print('time_step_spec.reward:', tf_env.time_step_spec().reward)
-
-# action = np.array((2,), dtype=np.int32)
-
-
-# rewards = []
-# steps = []
-# number_of_episodes = 2
-
-
-# for _ in range(number_of_episodes):
-#     reward_t = 0
-#     steps_t = 0
-#     while not tf_env.current_time_step().is_last():
-#         # action_test = action_test.from_array(np.array([np.random.randint(0,10), np.random.randint(0,4)], np.int32), name='play')
-
-#         print(action_test)
-
-#         action = [np.random.randint(0,10), np.random.randint(0,4)]
-#         next_time_step = tf_env.step(action)
-#         # print(tf_env.time_step_spec().reward)
-#         steps_t += 1
-#         reward_t += next_time_step.reward#.numpy()
-#     rewards.append(reward_t)
-#     steps.append(steps_t)
-#     tf_env.reset()
 
 tf_env.close()
 train_env.close()
