@@ -1,3 +1,4 @@
+from errno import EPIPE
 from py4j.java_gateway import JavaGateway
 
 from javaToPython import JavaToPython
@@ -41,6 +42,7 @@ from tf_agents.agents.sac import tanh_normal_projection_network
 from tf_agents.agents.sac import sac_agent
 from tf_agents.agents.categorical_dqn import categorical_dqn_agent
 from tf_agents.networks import categorical_q_network
+from tf_agents.networks.q_network import QNetwork
 
 import time
 
@@ -62,29 +64,42 @@ def compute_avg_return(environment, policy, num_episodes=10):
     while not time_step.is_last():
       action_step = policy.action(time_step)
       time_step = environment.step(action_step.action)
-      episode_return += time_step.reward
+      reward = time_step.reward
+      episode_return += reward
+      if reward != 0:
+        pass
+        # print("REWARD: " + str(reward) + " | TOTAL: " + str(episode_return))
+      
     total_return += episode_return
-
   avg_return = total_return / num_episodes
   return avg_return.numpy()[0]
+
+def save():
+  rb_observer.flush()
+  train_checkpointer.save(global_step)
+  np.save(return_file, returns)
+  e = open(epsilon_file, "w")
+  e.write(str(agent._epsilon_greedy))
+  e.close()
 
 
 tempdir = os.getenv("TEST_TMPDIR", tempfile.gettempdir())
 
-num_iterations = 1000000 # @param {type:"integer"}
+num_iterations = 80000 # @param {type:"integer"}
 
 initial_collect_steps = 10000  # @param {type:"integer"}
-collect_steps_per_iteration =   1# @param {type:"integer"}
+collect_steps_per_iteration =   100# @param {type:"integer"}
 replay_buffer_max_length = 20000000  # @param {type:"integer"}
 
-batch_size = 64  # @param {type:"integer"}
+batch_size = 256  # @param {type:"integer"}
 learning_rate = 1e-3  # @param {type:"number"}
 log_interval = 200  # @param {type:"integer"}
 
-num_eval_episodes = 10  # @param {type:"integer"}
-eval_interval = 10  # @param {type:"integer"}
+num_eval_episodes = 6  # @param {type:"integer"}
+eval_interval = 100  # @param {type:"integer"}
+save_interval = 1000
 
-epsilon = 0.2
+epsilon = 1
 
 
 '''
@@ -142,9 +157,16 @@ eval_py_env = pythonTetris(javaTalker)
 train_env = tf_py_environment.TFPyEnvironment(train_py_env)
 eval_env = tf_py_environment.TFPyEnvironment(eval_py_env)
 
-fc_layer_params = (100, 50)
+
+
+fc_layer_params = (200,100,5)
 action_tensor_spec = tensor_spec.from_spec(python_env.action_spec())
 num_actions = action_tensor_spec.maximum - action_tensor_spec.minimum + 1
+
+q_network = QNetwork(
+    train_env.observation_spec(),
+    train_env.action_spec(),
+    fc_layer_params=fc_layer_params)
 
 
 # QNetwork consists of a sequence of Dense layers followed by a dense layer
@@ -158,7 +180,6 @@ q_values_layer = tf.keras.layers.Dense(
         minval=-0.03, maxval=0.03),
     bias_initializer=tf.keras.initializers.Constant(-0.2))
 q_net = sequential.Sequential(dense_layers + [q_values_layer])
-global_step = tf.compat.v1.train.get_or_create_global_step()
 
 optimizer = tf.keras.optimizers.Adam(learning_rate=learning_rate)
 
@@ -295,14 +316,19 @@ agent.train_step_counter.assign(0)
 print("between 1")
 
 return_file = '/home/block5/Documents/GitHub/tetris/src/ai/checkpoint/returns.npy'
+epsilon_file = '/home/block5/Documents/GitHub/tetris/src/ai/checkpoint/epsilon.txt'
 if os.path.exists(return_file):
   for i in range(10):
     print("LOADING")
   returns =  np.load(return_file).tolist()
+  e = open(epsilon_file, "r")
+  agent._epsilon_greedy = float(e.read())
+  
 else:
   # Evaluate the agent's policy once before training.
   avg_return = compute_avg_return(eval_env, agent.policy, num_eval_episodes)
   returns = [avg_return]
+  open(epsilon_file, "x")
 
 print("between 3")
 # Reset the environment.
@@ -326,13 +352,13 @@ collect_driver = py_driver.PyDriver(
     max_steps=collect_steps_per_iteration)
 
 
-global_step = tf.compat.v1.train.get_global_step()
-
 print("script checkpoint 6")
 # try catch allows user to stop training and still see graph
 try:  
   for _ in range(num_iterations):
 
+    if agent._epsilon_greedy > 0.01:
+      agent._epsilon_greedy -= 0.0000018
     # Collect a few steps and save to the replay buffer.
     time_step, _ = collect_driver.run(time_step)
 
@@ -343,19 +369,22 @@ try:
     step = agent.train_step_counter.numpy()
 
     if step % log_interval == 0:
+      print()
       print('step = {0}: loss = {1}'.format(step, train_loss))
 
     if step % eval_interval == 0:
-      avg_return = compute_avg_return(eval_env, agent.policy, num_eval_episodes)
-      if avg_return > 13:
-        agent._epsilon_greedy -= 0.05
+      avg = compute_avg_return(eval_env, agent.policy, num_eval_episodes)
+      if avg > 2 and agent._epsilon_greedy > 0.11:
+        agent._epsilon_greedy -= 0.1
       print()
-      print('step = {0}: Average Return = {1}'.format(step, avg_return))
-      returns.append(avg_return)
+      print('step = {0}: Average Return = {1}: Epsilon Greedy = {2}'.format(step, avg, agent._epsilon_greedy))
+      returns.append(avg)
+    
+    if step % save_interval == 0:
+      save()
 finally:
   
-  train_checkpointer.save(global_step)
-  np.save(return_file, returns)
+  save()
   
   # iterations = range(0, num_iterations + 1, eval_interval)
   iterations = range(0, len(returns))

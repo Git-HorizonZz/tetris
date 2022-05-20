@@ -279,7 +279,12 @@ public class Tetris extends JPanel
 				deltaScore = 800;
 				break;
 		}
-		score += deltaScore;
+
+		//resets score if it gets too high
+		if(score < Integer.MAX_VALUE / 2)
+			score += deltaScore;
+		else
+		score = 0;
 	}
 	
 	public void paintComponent(Graphics g)
@@ -424,6 +429,7 @@ public class Tetris extends JPanel
 
 	public long getDeltaScore(){
 		long dScore = deltaScore;
+		// System.out.println("SCORE: " + dScore);
 		deltaScore = 0;
 		return dScore;
 	}
@@ -495,7 +501,7 @@ public class Tetris extends JPanel
 		}
 		aveX /= (double) Tetrominos [curPiece] [rotation].length;
 		aveX = Math.abs(aveX);
-		System.out.println("java: " + aveX);
+		// System.out.println("java: " + aveX);
 		return aveX;
 	}
 

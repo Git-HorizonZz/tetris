@@ -26,7 +26,7 @@ class JavaToPython():
         self.not_collided_reward = 0
         self.just_rotated = False
         
-        self.max_pieces = 6
+        self.max_pieces = 20
         self.total_pieces = 0
         
     def get_python_wall(self):
@@ -38,10 +38,10 @@ class JavaToPython():
     
     def get_episode_over(self):
         if self.tetris_UI.getEpisodeOver():
-            return -2
+            return -1
         elif self.total_pieces > self.max_pieces:
-            # print("I win :)")
-            return 1
+            print("I win :)")
+            return self.max_pieces * 0.1
         else:
             return 0
 
@@ -60,22 +60,26 @@ class JavaToPython():
             reward = - (0.001 * (rewardX - (5 * rewardY)))
             # print("reward: " + str(reward))
             # print("SCORE: " + str(reward))
-            if self.tetris_UI.getDeltaScore() != 0:
+            
+            score = self.tetris_UI.getDeltaScore()
+            if score != 0:
                 # print("SCORED!!: " + str(self.tetris_UI.getDeltaScore() / 50))
-                print("I SCORED!!!!!")
-                return self.tetris_UI.getDeltaScore() / 25
+                reward = (score / 100)
+                print("I SCORED!!!!! (" + str(reward) + ")")
+                return reward
             elif not self.covered_row():
                 # print("No cover: " + str(reward))
                 return reward
             else:
                 # print("cover: " + str(reward / 5))
                 if reward < 0:
-                    return reward * 5
+                    return reward * 2
                 else:
-                    return reward / 5
+                    return reward / 2
         else:
             # if self.not_collided_reward < 0:
             #     print(random.randint(1, 9), end="", flush=True)
+            # print("still falling: " + str(self.not_collided_reward))
             return self.not_collided_reward
         
         self.just_collided()
@@ -107,6 +111,9 @@ class JavaToPython():
             if b:
                 covered = True
         return covered
+    
+    def move_down(self):
+        self.actions_obj.moveDown()
         
     def enactAction(self, move):
         action = move.item()
@@ -122,17 +129,17 @@ class JavaToPython():
             self.just_rotated = True
         elif action == 2:
             if self.tetris_UI.canMoveLeft():
-                self.not_collided_reward = -0.002
+                self.not_collided_reward = -0.000#2
             else:
-                self.not_collided_reward = 0.0007
+                self.not_collided_reward = 0.0000#7
                 # print("bad")
             self.actions_obj.moveLeft()
             self.just_rotated = False
         elif action == 3:
             if self.tetris_UI.canMoveRight():
-                self.not_collided_reward = -0.002
+                self.not_collided_reward = -0.000#2
             else:
-                self.not_collided_reward = 0.0007
+                self.not_collided_reward = 0.0000#7
                 # print("bad")
             self.actions_obj.moveRight()
             self.just_rotated = False

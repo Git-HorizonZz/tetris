@@ -54,8 +54,8 @@ class pythonTetris(py_environment.PyEnvironment):
         else:
             # print("step!")
             # Otherwise decide action and see wall
-            if action != self.old_action:
-                print(str(self.action_counter) + " " + str(action), end="", flush=True)
+            if action != self.old_action and self.action_counter > 2:
+                # print(str(self.action_counter) + " " + str(action), end="", flush=True)
                 self.action_counter = 0
             else:
                 self.action_counter += 1
