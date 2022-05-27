@@ -273,7 +273,7 @@ rb_observer = reverb_utils.ReverbAddTrajectoryObserver(
 
 
 
-checkpoint_dir = '/home/block5/Documents/GitHub/tetris/src/ai/checkpoint'
+checkpoint_dir = os.path.dirname(os.path.realpath(__file__)) + '/checkpoint'
 global_step = tf.compat.v1.train.get_or_create_global_step()
 train_checkpointer = common.Checkpointer(
   ckpt_dir=checkpoint_dir,
@@ -315,8 +315,8 @@ agent.train_step_counter.assign(0)
 
 print("between 1")
 
-return_file = '/home/block5/Documents/GitHub/tetris/src/ai/checkpoint/returns.npy'
-epsilon_file = '/home/block5/Documents/GitHub/tetris/src/ai/checkpoint/epsilon.txt'
+return_file = checkpoint_dir + '/returns.npy'
+epsilon_file = checkpoint_dir + '/epsilon.txt'
 if os.path.exists(return_file):
   for i in range(10):
     print("LOADING")

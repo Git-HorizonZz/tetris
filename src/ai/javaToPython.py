@@ -23,10 +23,10 @@ class JavaToPython():
         self.speed = 0.
         self.x_pos = 0
         self.move = 0
-        self.not_collided_reward = 0
+        self.not_collided_reward = 0.001
         self.just_rotated = False
         
-        self.max_pieces = 20
+        self.max_pieces = 100
         self.total_pieces = 0
         
     def get_python_wall(self):
@@ -34,6 +34,7 @@ class JavaToPython():
         byteArray = self.tetris_UI.getByteArray(wall)
         intArray = numpy.frombuffer(byteArray, dtype=numpy.int32)
         finalArray = numpy.reshape(intArray, (self.tetris_UI.getGameWidth(), self.tetris_UI.getGameHeight()))
+        # print(finalArray)
         return intArray
     
     def get_episode_over(self):
@@ -82,6 +83,7 @@ class JavaToPython():
             # print("still falling: " + str(self.not_collided_reward))
             return self.not_collided_reward
         
+        # testing to see if it can learn anything
         self.just_collided()
         if self.move == 4:
             # print("good" + str(self.move))
@@ -118,7 +120,7 @@ class JavaToPython():
     def enactAction(self, move):
         action = move.item()
         self.move = move.item()
-        self.not_collided_reward = 0
+        self.not_collided_reward = 0.001
         if action == 0:
             if self.just_rotated or not self.actions_obj.rotateClockwise():
                 self.not_collided_reward = -0.000#6

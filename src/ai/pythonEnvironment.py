@@ -12,6 +12,7 @@ from javaToPython import JavaToPython
 import numpy as np
 
 from waiting import wait
+from time import sleep
 
 class pythonTetris(py_environment.PyEnvironment):
     def __init__(self, java_talker):
@@ -38,7 +39,9 @@ class pythonTetris(py_environment.PyEnvironment):
         return ts.restart(np.array(self._state, dtype=np.int32))
 
     def _step(self, action):
-            
+        
+        
+        # sleep(0.02)
         # only run step logic right after the piece lands
         # Restarts if episode is over
         if self._episode_ended:

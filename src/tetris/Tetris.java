@@ -84,7 +84,7 @@ public class Tetris extends JPanel
 	private int curPiece;
 	private int rotation;
 	private int county;
-	private int [] [] wall2; //clone wall to feed to ai
+	private int [] [] intWall; // wall of 1s and 0s to feed to ai
 	ArrayList<Boolean> coveredRows = new ArrayList<Boolean>();
 
 	private double aveY;
@@ -95,7 +95,7 @@ public class Tetris extends JPanel
 	public void startUp()
 	{
 		wall = new Color [gameWidth] [gameHeight];
-		wall2 = new int [gameWidth] [gameHeight];
+		intWall = new int [gameWidth] [gameHeight];
 		for (int i=0; i<gameWidth; i++) 
 		{
 			for (int k=0; k<gameHeight - 1; k++) 
@@ -104,13 +104,13 @@ public class Tetris extends JPanel
 				if (i==0 || i==11 || k==0 || k==22) 
 				{
 					wall [i] [k] = Color.BLACK;
-					wall2 [i] [k] = 1;
+					intWall [i] [k] = 1;
 				}
 				else 
 				{
 					// sets everything else to gray
 					wall [i] [k] = Color.GRAY;
-					wall2 [i] [k] = 0;
+					intWall [i] [k] = 0;
 				}
 			}
 		}
@@ -122,7 +122,7 @@ public class Tetris extends JPanel
 	{
 		spawning = false;
 		pieceOrigin = new Point(5, 2);
-		if (wall[5][2] != Color.GRAY)
+		if (wall [5][2] != Color.GRAY)
 		{
 			System.out.println("game over");
 			episodeOver = true;
@@ -142,12 +142,12 @@ public class Tetris extends JPanel
 			
 			for (Point p : Tetrominos [curPiece] [rotation])
 			{
-				wall2[pieceOrigin.x + p.x][pieceOrigin.y + p.y] = 1;
+				intWall[pieceOrigin.x + p.x][pieceOrigin.y + p.y] = 1;
 			}
 			// printWall();
 			for (Point p : Tetrominos [curPiece] [rotation])
 			{
-				wall2[pieceOrigin.x + p.x][pieceOrigin.y + p.y] = 0;
+				intWall[pieceOrigin.x + p.x][pieceOrigin.y + p.y] = 0;
 			}
 			if (collidesAt(pieceOrigin.x, pieceOrigin.y + 1, rotation)) 
 			{
@@ -182,7 +182,17 @@ public class Tetris extends JPanel
 		if (!collidesAt(pieceOrigin.x, pieceOrigin.y, newRotation)) 
 		{
 			canTurn = true;
+			for (Point p : Tetrominos [curPiece] [rotation])
+			{
+				int row = pieceOrigin.x + p.x;
+				intWall [row][pieceOrigin.y + p.y] = 0;
+			}
 			rotation = newRotation;
+			for (Point p : Tetrominos [curPiece] [rotation])
+			{
+				int row = pieceOrigin.x + p.x;
+				intWall [row][pieceOrigin.y + p.y] = 1;
+			}
 		}
 		repaint();
 		return canTurn;
@@ -192,7 +202,17 @@ public class Tetris extends JPanel
 	{
 		if (!collidesAt(pieceOrigin.x + i, pieceOrigin.y, rotation)) 
 		{
+			for (Point p : Tetrominos [curPiece] [rotation])
+			{
+				int row = pieceOrigin.x + p.x;
+				intWall [row][pieceOrigin.y + p.y] = 0;
+			}
 			pieceOrigin.x += i;
+			for (Point p : Tetrominos [curPiece] [rotation])
+			{
+				int row = pieceOrigin.x + p.x;
+				intWall [row][pieceOrigin.y + p.y] = 1;
+			}
 		}
 		repaint();
 	}
@@ -202,7 +222,17 @@ public class Tetris extends JPanel
 		ArrayList<Integer> affectedRows = new ArrayList<Integer>();
 		if (!collidesAt(pieceOrigin.x, pieceOrigin.y + 1, rotation)) 
 		{
+			for (Point p : Tetrominos [curPiece] [rotation])
+			{
+				int row = pieceOrigin.x + p.x;
+				intWall [row][pieceOrigin.y + p.y] = 0;
+			}
 			pieceOrigin.y++;
+			for (Point p : Tetrominos [curPiece] [rotation])
+			{
+				int row = pieceOrigin.x + p.x;
+				intWall [row][pieceOrigin.y + p.y] = 1;
+			}
 		} 
 		else 
 		{
@@ -211,8 +241,8 @@ public class Tetris extends JPanel
 				int row = pieceOrigin.x + p.x;
 				boolean newRow = true;
 
-				wall[row][pieceOrigin.y + p.y] = tetrominoColours[curPiece];
-				wall2[row][pieceOrigin.y + p.y] = 1;
+				wall [row][pieceOrigin.y + p.y] = tetrominoColours[curPiece];
+				intWall [row][pieceOrigin.y + p.y] = 1;
 				
 				for(int i : affectedRows){
 					if (row == i){
@@ -243,7 +273,7 @@ public class Tetris extends JPanel
 			gap = false;
 			for (int i=1; i<11; i++) 
 			{
-				if (wall[i][k] == Color.GRAY) 
+				if (wall [i][k] == Color.GRAY) 
 				{
 					gap = true;
 					break;
@@ -256,7 +286,7 @@ public class Tetris extends JPanel
 					for (int u=1; u<11; u++) 
 					{
 						wall [u] [l+1] = wall [u] [l];
-						wall2 [u] [l+1] = wall2 [u] [l];
+						intWall [u] [l+1] = intWall [u] [l];
 					}
 				}
 				k++;
@@ -337,7 +367,7 @@ public class Tetris extends JPanel
 	 */
 	public int[][] getWall()
 	{
-		int [][] tempWall = wall2;
+		int [][] tempWall = intWall;
 		return tempWall;
 	}
 
@@ -365,12 +395,11 @@ public class Tetris extends JPanel
 
 	public void printWall()
 	{
-		int [][] intWall = getWall();
 		for(int row=0; row < wall.length; row++)
 		{
-			for(int col=wall[0].length-2; col >= 0; col--)
+			for(int col=wall [0].length-2; col >= 0; col--)
 			{
-				if (intWall[row][col] == 1)
+				if (intWall [row][col] == 1)
 				{
 					System.out.print(" X"); // "X" is printed where a sqaure is covered
 				}

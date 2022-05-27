@@ -1,3 +1,6 @@
+import os
+print(os.path.dirname(os.path.realpath(__file__)))
+
 from py4j.java_gateway import JavaGateway
 
 from javaToPython import JavaToPython
