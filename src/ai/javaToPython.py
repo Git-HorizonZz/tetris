@@ -86,7 +86,7 @@ class JavaToPython():
             # if self.not_collided_reward < 0:
             #     print(random.randint(1, 9), end="", flush=True)
             # print("still falling: " + str(self.not_collided_reward))
-            return reward / 2
+            return 4 * reward / 5
         
         # testing to see if it can learn anything
         self.just_collided()
