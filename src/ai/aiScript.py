@@ -375,7 +375,7 @@ try:
     if step % eval_interval == 0:
       avg = compute_avg_return(eval_env, agent.policy, num_eval_episodes)
       if avg > 2 and agent._epsilon_greedy > 0.11:
-        agent._epsilon_greedy -= 0.1
+        agent._epsilon_greedy -= 0.001
       print()
       print('step = {0}: Average Return = {1}: Epsilon Greedy = {2}'.format(step, avg, agent._epsilon_greedy))
       returns.append(avg)
