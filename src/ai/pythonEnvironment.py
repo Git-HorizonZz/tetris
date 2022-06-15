@@ -23,6 +23,7 @@ class pythonTetris(py_environment.PyEnvironment):
             shape=(288,), dtype=np.int32, minimum=0, maximum=1, name='observation')
         self._state = np.zeros(shape=(288,))
         self._episode_ended = False
+        self.game_ended = False
         self.old_action = -1
         self.action_counter = 0
 
@@ -33,9 +34,10 @@ class pythonTetris(py_environment.PyEnvironment):
         return self._observation_spec
 
     def _reset(self):
-        self.java_talker.restart()
+        self.java_talker.restart(new_episode=self._episode_ended)
         self._state = np.zeros(shape=(288,))
         self._episode_ended = False
+        self.game_ended = False
         return ts.restart(np.array(self._state, dtype=np.int32))
 
     def _step(self, action):
@@ -44,16 +46,19 @@ class pythonTetris(py_environment.PyEnvironment):
         # sleep(0.02)
         # only run step logic right after the piece lands
         # Restarts if episode is over
-        if self._episode_ended:
+        if self._episode_ended or self.game_ended:
             return self.reset()
 
-        is_over = self.java_talker.get_episode_over()
-        if is_over != 0:
-            # If episode is over, let environment know and give punishment of -2
-            self.java_talker.restart()
+        is_over = self.java_talker.get_game_over()
+        if self.java_talker.get_episode_over():
             self._episode_ended = True
-            print("end", end="", flush=True)
-            return ts.termination(np.array(self._state, dtype=np.int32), is_over)
+            print("finished", flush=True)
+            return ts.termination(np.array(self._state, dtype=np.int32), 50)
+        elif is_over != 0:
+            # If episode is over, let environment know and give punishment of -2
+            self.game_ended = True
+            print("end" + str(self.java_talker.total_games), end="", flush=True)
+            return ts.transition(np.array(self._state, dtype=np.int32), -50)
         else:
             # print("step!")
             # Otherwise decide action and see wall

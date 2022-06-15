@@ -28,7 +28,12 @@ class JavaToPython():
         self.just_rotated = False
         
         self.max_pieces = 50
+        self.max_rows = 1
+        self.max_games = 15
+        
+        self.total_games = 0
         self.total_pieces = 0
+        self.rows_finished = 0
         
     def get_python_wall(self):
         wall = self.tetris_UI.getWall()
@@ -38,17 +43,25 @@ class JavaToPython():
         # print(finalArray)
         return intArray
     
-    def get_episode_over(self):
+    def get_game_over(self):
         if self.tetris_UI.getEpisodeOver():
+            self.total_games += 1
             return -1
         elif self.total_pieces > self.max_pieces:
             # print("I win :)")
+            self.total_games += 1
             return self.max_pieces * 0.05
         else:
             return 0
+        
+    def get_episode_over(self):
+        return self.rows_finished >= self.max_rows or self.total_games >= self.max_games
 
-    def restart(self):
+    def restart(self, new_episode):
         self.total_pieces = 0
+        self.rows_finished = 0
+        if new_episode:
+            self.total_games = 0
         self.tetris_UI.newEpisode()
         
     def get_reward(self):
@@ -56,7 +69,7 @@ class JavaToPython():
         rewardY = self.ave_y#(0.1 * self.ave_y ** (1/1.8)) + 0.1
         rewardX = self.ave_x #(0.12 * self.ave_x)
         reward = (0.04 * ((5 * rewardY) - rewardX))
-        reward = 1.1 ** reward
+        reward = (1.1 ** reward) - 1.2
         
         
         if self.just_collided():
@@ -70,7 +83,8 @@ class JavaToPython():
             score = self.tetris_UI.getDeltaScore()
             if score != 0:
                 # print("SCORED!!: " + str(self.tetris_UI.getDeltaScore() / 50))
-                reward += (score / 300)
+                reward += (score)
+                self.rows_finished += 1
                 print("I SCORED!!!!! (" + str(reward) + ")")
                 return reward
             else: #if not self.covered_row():
@@ -166,14 +180,14 @@ class JavaToPython():
         rot = rotation.item()
         x = x_pos.item()
         # print("moving")
-        while self.tetris_UI.getRotation() is not rot and not self.get_episode_over():
+        while self.tetris_UI.getRotation() is not rot and not self.get_game_over():
             # print("REAL: " + str((self.tetris_UI.getRotation())) + "  GOAL: " + str((rot)))
             if self.tetris_UI.getRotation() - rot < 0:
                 self.actions_obj.rotateClockwise()
             else:
                 self.actions_obj.rotateCounterClockwise()
             time.sleep(self.speed)
-        while self.tetris_UI.get_X() != x and not self.get_episode_over():
+        while self.tetris_UI.get_X() != x and not self.get_game_over():
             # self.terminal.println("REAL: " + str((self.tetris_UI.get_X())) + "  GOAL: " + str((x)))
             if self.tetris_UI.get_X() > x:
                 if not self.tetris_UI.canMoveLeft():

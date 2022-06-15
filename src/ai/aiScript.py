@@ -87,15 +87,15 @@ tempdir = os.getenv("TEST_TMPDIR", tempfile.gettempdir())
 
 num_iterations = 80000 # @param {type:"integer"}
 
-initial_collect_steps = 10000  # @param {type:"integer"}
-collect_steps_per_iteration =   100# @param {type:"integer"}
+initial_collect_steps = 100000  # @param {type:"integer"}
+collect_steps_per_iteration = 100 * 15# @param {type:"integer"}
 replay_buffer_max_length = 20000000  # @param {type:"integer"}
 
 batch_size = 256  # @param {type:"integer"}
 learning_rate = 1e-3  # @param {type:"number"}
 log_interval = 200  # @param {type:"integer"}
 
-num_eval_episodes = 6  # @param {type:"integer"}
+num_eval_episodes = 3  # @param {type:"integer"}
 eval_interval = 100  # @param {type:"integer"}
 save_interval = 1000
 
