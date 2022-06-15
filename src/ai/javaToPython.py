@@ -30,12 +30,15 @@ class JavaToPython():
         self.max_pieces = 50
         self.total_pieces = 0
         
+        self.total_steps = 0
+        
     def get_python_wall(self):
         wall = self.tetris_UI.getWall()
         byteArray = self.tetris_UI.getByteArray(wall)
         intArray = numpy.frombuffer(byteArray, dtype=numpy.int32)
         finalArray = numpy.reshape(intArray, (self.tetris_UI.getGameWidth(), self.tetris_UI.getGameHeight()))
         # print(finalArray)
+        intArray = numpy.append(intArray, self.total_steps)
         return intArray
     
     def get_episode_over(self):
@@ -49,6 +52,7 @@ class JavaToPython():
 
     def restart(self):
         self.total_pieces = 0
+        self.total_steps = 0
         self.tetris_UI.newEpisode()
         
     def get_reward(self):
@@ -86,7 +90,7 @@ class JavaToPython():
             # if self.not_collided_reward < 0:
             #     print(random.randint(1, 9), end="", flush=True)
             # print("still falling: " + str(self.not_collided_reward))
-            return 4 * reward / 5
+            return 3 * reward / 5
         
         # testing to see if it can learn anything
         self.just_collided()
@@ -126,6 +130,7 @@ class JavaToPython():
         action = move.item()
         self.move = move.item()
         self.not_collided_reward = self.initial_not_collided_reward
+        self.total_steps += 1
         if action == 0:
             # if self.just_rotated or not self.actions_obj.rotateClockwise():
             #     self.not_collided_reward = -0.000#6
@@ -155,7 +160,7 @@ class JavaToPython():
             self.just_rotated = False
         
     
-
+    # currently not using
     def go_to_location(self, position):
         rotation = position // 10
         x_pos = position % 10

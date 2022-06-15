@@ -358,7 +358,7 @@ try:
   for _ in range(num_iterations):
 
     if agent._epsilon_greedy > 0.01:
-      agent._epsilon_greedy -= 0.0000018
+      agent._epsilon_greedy -= 0.00018
     # Collect a few steps and save to the replay buffer.
     time_step, _ = collect_driver.run(time_step)
 
@@ -374,8 +374,6 @@ try:
 
     if step % eval_interval == 0:
       avg = compute_avg_return(eval_env, agent.policy, num_eval_episodes)
-      if avg > 2 and agent._epsilon_greedy > 0.11:
-        agent._epsilon_greedy -= 0.001
       print()
       print('step = {0}: Average Return = {1}: Epsilon Greedy = {2}'.format(step, avg, agent._epsilon_greedy))
       returns.append(avg)

@@ -20,8 +20,8 @@ class pythonTetris(py_environment.PyEnvironment):
         self._action_spec = array_spec.BoundedArraySpec(
             shape=(), dtype=np.int64, minimum=0, maximum=4, name='play')
         self._observation_spec = array_spec.BoundedArraySpec(
-            shape=(288,), dtype=np.int32, minimum=0, maximum=1, name='observation')
-        self._state = np.zeros(shape=(288,))
+            shape=(289,), dtype=np.int32, minimum=0, maximum=1, name='observation')
+        self._state = np.zeros(shape=(289,))
         self._episode_ended = False
         self.old_action = -1
         self.action_counter = 0
@@ -34,7 +34,7 @@ class pythonTetris(py_environment.PyEnvironment):
 
     def _reset(self):
         self.java_talker.restart()
-        self._state = np.zeros(shape=(288,))
+        self._state = np.zeros(shape=(289,))
         self._episode_ended = False
         return ts.restart(np.array(self._state, dtype=np.int32))
 
@@ -47,7 +47,8 @@ class pythonTetris(py_environment.PyEnvironment):
         if self._episode_ended:
             return self.reset()
 
-        is_over = self.java_talker.get_episode_over()
+        # print(self._state.item(len(self._state) - 1))
+        is_over = self.java_talker.get_episode_over() or self._state.item(len(self._state) - 1) > 700
         if is_over != 0:
             # If episode is over, let environment know and give punishment of -2
             self.java_talker.restart()

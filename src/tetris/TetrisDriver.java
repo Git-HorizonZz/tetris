@@ -51,7 +51,7 @@ public class TetrisDriver
 					try 
 					{
 						Thread.sleep(speed);
-						game.drop();
+						// game.drop();
 						count++;
 						if (count % 5 == 0 && speed > 200)
 						{
